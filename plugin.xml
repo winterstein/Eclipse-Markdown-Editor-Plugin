@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Markdown Editor"
+            extensions="txt,md"
+            icon="icons/notepad.gif"
+            contributorClass="winterwell.markdown.editors.ActionBarContributor"
+            class="winterwell.markdown.editors.MarkdownEditor"
+            id="winterwell.markdown.editors.MarkdownEditor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="winterwell.markdown"
+            name="Markdown"/>
+      <view
+            category="winterwell.markdown"
+            class="winterwell.markdown.views.MarkdownPreview"
+            icon="icons/notepad.gif"
+            id="winterwell.markdown.views.MarkdownPreview"
+            name="Markdown HTML Preview"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="winterwell.markdown.preferences.MarkdownPreferencePage"
+            id="winterwell.markdown.preferences.MarkdownPreferencePage"
+            name="Markdown"
+            category="org.eclipse.ui.preferencePages.GeneralTextEditor">
+         <keywordReference
+               id="winterwell.markdown.prefsKeywordReference">
+         </keywordReference>
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.keywords">
+      <keyword
+            id="winterwell.markdown.prefsKeywordReference"
+            label="word wrapping tool tags">
+      </keyword>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="winterwell.markdown.editors.FormatAction"
+            description="Format the paragraph under the caret to fit the print margins by inserting/removing line-breaks"
+            id="winterwell.markdown.formatParagraphCommand"
+            name="Format paragraph">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="winterwell.markdown.formatParagraphCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Alt+Q">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="winterwell.markdown.actionSet"
+            label="winterwell.markdown.actionSet">
+         <action
+               class="winterwell.markdown.editors.FormatAction"
+               definitionId="winterwell.markdown.formatParagraphCommand"
+               id="winterwell.markdown.formatParagraphAction"
+               label="Format paragraph"
+               menubarPath="edit"
+               style="push">
+         </action>
+      </actionSet>
+   </extension>
+
+</plugin>
