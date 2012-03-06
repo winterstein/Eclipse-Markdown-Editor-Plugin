@@ -17,7 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 import winterwell.markdown.StringMethods;
-import winterwell.utils.StringUtils;
+import winterwell.utils.StrUtils;
 import winterwell.utils.containers.Pair;
 
 /**

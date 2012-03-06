@@ -25,7 +25,7 @@ import winterwell.markdown.preferences.MarkdownPreferencePage;
 import winterwell.utils.FailureException;
 import winterwell.utils.TodoException;
 import winterwell.utils.Utils;
-import winterwell.utils.StringUtils;
+import winterwell.utils.StrUtils;
 import winterwell.utils.io.FileUtils;
 import winterwell.utils.Process;
 
@@ -278,7 +278,7 @@ public class MarkdownPage {
 						break;
 					// Multi-line tag
 					lineTypes.add(KLineType.META);
-					data += StringUtils.LINEEND + line.trim();
+					data += StrUtils.LINEEND + line.trim();
 					multiMarkdownTags.put(tag, data);
 				} else {
 					lineTypes.add(KLineType.META);

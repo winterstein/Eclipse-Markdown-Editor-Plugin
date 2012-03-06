@@ -41,7 +41,7 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.pagemodel.MarkdownPage.Header;
 import winterwell.markdown.pagemodel.MarkdownPage.KLineType;
-import winterwell.utils.StringUtils;
+import winterwell.utils.StrUtils;
 import winterwell.utils.Utils;
 import winterwell.utils.containers.Containers;
 import winterwell.utils.web.WebUtils;
@@ -206,7 +206,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 					text = text.replaceAll("#", "").trim();
 					assert text.startsWith(hText);
 					text = text.substring(hText.length());
-					int wc = StringUtils.wordCount(text);
+					int wc = StrUtils.wordCount(text);
 					return hText + " (" + wc + ":" + text.length() + ")";
 				} catch (BadLocationException e) {
 					return hText;

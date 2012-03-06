@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Markdown
 Bundle-SymbolicName: winterwell.markdown;singleton:=true
-Bundle-Version: 0.2.1
+Bundle-Version: 0.2.2
 Bundle-Activator: winterwell.markdown.Activator
 Bundle-Vendor: Winterwell Associates Ltd
 Require-Bundle: org.eclipse.ui,
@@ -16,5 +16,6 @@ Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.core.internal.resources,
  org.eclipse.jface.text,
  org.eclipse.ui.texteditor
-Bundle-ClassPath: net.sf.paperclips_1.0.1.jar,
- .
+Bundle-ClassPath: lib/markdownj-1.0.2b4-0.3.0.jar,
+ lib/winterwell.utils.jar,
+ lib/net.sf.paperclips_1.0.1.jar

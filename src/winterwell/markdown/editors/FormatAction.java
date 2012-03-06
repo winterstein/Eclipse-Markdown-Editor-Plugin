@@ -23,7 +23,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import winterwell.markdown.pagemodel.MarkdownFormatter;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.pagemodel.MarkdownPage.KLineType;
-import winterwell.utils.StringUtils;
+import winterwell.utils.StrUtils;
 import winterwell.utils.containers.IntRange;
 
 /**
@@ -93,7 +93,7 @@ public class FormatAction extends Action implements IHandler {
 				continue;
 			}
 			String paragraph = ed.getDocument().get(para.getOffset(), para.getLength());
-//			int lines = StringUtils.splitLines(paragraph).length;
+//			int lines = StrUtils.splitLines(paragraph).length;
 			String formatted = MarkdownFormatter.format(paragraph, cols);
 			// append formatted and move forward
 			sb.append(formatted);

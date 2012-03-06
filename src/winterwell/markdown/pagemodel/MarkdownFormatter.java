@@ -3,7 +3,7 @@ package winterwell.markdown.pagemodel;
 
 import java.util.List;
 
-import winterwell.utils.StringUtils;
+import winterwell.utils.StrUtils;
 
 /**
  * Formats a string that is compatible with the Markdown syntax.
@@ -40,7 +40,7 @@ public class MarkdownFormatter
     else if ( lines.get(0).endsWith ("\r") )
       lineEndings = "\r";
     else
-      lineEndings = StringUtils.LINEEND;
+      lineEndings = StrUtils.LINEEND;
     
     final StringBuilder buf = new StringBuilder();
     for (String line : lines) {
@@ -64,7 +64,7 @@ public class MarkdownFormatter
    */
   public static String format ( final String text, final int lineWidth)
   {
-    return format(text, lineWidth, StringUtils.LINEEND);
+    return format(text, lineWidth, StrUtils.LINEEND);
   }
   
   /**
