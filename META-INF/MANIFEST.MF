@@ -16,6 +16,6 @@ Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.core.internal.resources,
  org.eclipse.jface.text,
  org.eclipse.ui.texteditor
-Bundle-ClassPath: lib/markdownj-1.0.2b4-0.3.0.jar,
+Bundle-ClassPath: .,target/classes,lib/markdownj-1.0.2b4-0.3.0.jar,
  lib/winterwell.utils.jar,
  lib/net.sf.paperclips_1.0.1.jar
