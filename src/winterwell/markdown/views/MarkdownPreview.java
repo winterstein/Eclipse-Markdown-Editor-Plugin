@@ -92,7 +92,7 @@ public class MarkdownPreview extends ViewPart {
 		path = path.removeLastSegments(1);
 		File f = path.toFile();
 		URI fileURI = f.toURI();
-		String html2 = "<html><head><base href='"+fileURI+"' /></head><body>\r\n"+html
+		String html2 = "<html><head><LINK href='"+fileURI+"style.css' rel="stylesheet" type="text/css"><base href='"+fileURI+"' /></head><body>\r\n"+html
 		+"\r\n</body></html>";
 		return html2;
 	} catch (Exception ex) {
