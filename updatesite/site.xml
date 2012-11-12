@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/markdown.editor.feature_0.2.0.jar" id="markdown.editor.feature" version="0.2.0"/>
+   <feature url="features/markdown.editor.feature_0.2.2.jar" id="markdown.editor.feature" version="0.2.2">
+      <category name="markdowneditor"/>
+   </feature>
+   <category-def name="markdowneditor" label="Markdown Editor">
+      <description>
+         Extend the text editor to provide good Markdown support.
+      </description>
+   </category-def>
 </site>
