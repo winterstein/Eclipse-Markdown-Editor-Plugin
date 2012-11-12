@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="markdown.editor.feature"
+      label="Markdown Editor"
+      version="0.2.0"
+      provider-name="Winterwell">
+
+   <description url="http://www.winterwell.com/software/markdown-editor.php">
+      Support for editing the text-markup language Markdown. Also provides some nice enhancements to the text editor.
+
+Markdown Features:
+
+- Content outline
+- Section folding
+- Export to HTML and HTML Preview
+
+General Text Features:
+
+- Word wrapping
+- TODO task tags
+- Format paragraph command
+
+The download includes all source code and project files.
+   </description>
+
+   <copyright>
+      Developed by Daniel Winterstein.
+Except where otherwise stated, this program and all related material are copyright (c) Winterwell Associates Ltd, 2008-2012 and ThinkTank Mathematics Ltd, 2007.
+
+Contains code from the MarkdownJ project, released under a BSD license. See http://sourceforge.net/projects/markdownj/ for more information.
+
+The Markdown syntax is copyright (c) 2004, John Gruber. It is used under a BSD-style license. See http://daringfireball.net/projects/markdown/license for more information.
+   </copyright>
+
+   <license url="http://www.eclipse.org/org/documents/epl-v10.html">
+      Eclipse Public License
+   </license>
+
+   <plugin
+         id="winterwell.markdown"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
