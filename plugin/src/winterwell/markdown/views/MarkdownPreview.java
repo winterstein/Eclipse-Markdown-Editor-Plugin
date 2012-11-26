@@ -75,7 +75,9 @@ public class MarkdownPreview extends ViewPart {
 		} catch (Exception ex) {
 			// Smother
 			System.out.println(ex);
-			viewer.setText(ex.getMessage());
+			
+			if (viewer != null && !viewer.isDisposed())
+				viewer.setText(ex.getMessage());
 		}
 	}
 
