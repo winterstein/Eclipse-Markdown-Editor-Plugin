@@ -5,6 +5,8 @@
  */
 package winterwell.markdown.editors;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IRule;
@@ -20,6 +22,9 @@ import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
 
+import winterwell.markdown.Activator;
+import winterwell.markdown.preferences.MarkdownPreferencePage;
+
 /**
  * 
  *
@@ -28,10 +33,11 @@ import org.eclipse.swt.SWT;
 public class MDScanner extends RuleBasedScanner {
 	ColorManager cm;
     public MDScanner(ColorManager cm) {
-    	this.cm = cm;      
-    	Token heading = new Token(new TextAttribute(cm.getColor(MDColorConstants.HEADER), null, SWT.BOLD));
-        Token comment = new Token(new TextAttribute(cm.getColor(MDColorConstants.COMMENT)));
-        Token emphasis = new Token(new TextAttribute(cm.getColor(MDColorConstants.DEFAULT), null, SWT.ITALIC));
+    	this.cm = cm;
+    	IPreferenceStore pStore = Activator.getDefault().getPreferenceStore();
+    	Token heading = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_HEADER)), null, SWT.BOLD));
+    	Token comment = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_COMMENT))));
+    	Token emphasis = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_DEFUALT)), null, SWT.ITALIC));
         setRules(new IRule[] {           
            new HeaderRule(heading),
            new EmphasisRule("_", emphasis),

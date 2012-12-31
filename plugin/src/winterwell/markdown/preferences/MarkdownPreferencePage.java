@@ -3,6 +3,7 @@ package winterwell.markdown.preferences;
 import org.eclipse.jface.preference.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -42,6 +43,14 @@ public class MarkdownPreferencePage
 	public static final String PREF_MARKDOWN_COMMAND = "Pref_Markdown_Command";
 	private static final String MARKDOWNJ = "(use built-in MarkdownJ converter)";
 	
+
+	public static final String PREF_DEFUALT = "Pref_Default";
+	public static final String PREF_COMMENT = "Pref_Comment";
+	public static final String PREF_HEADER = "Pref_Header";
+	private static final RGB DEF_DEFAULT = new RGB(0, 0, 0);
+	private static final RGB DEF_COMMENT = new RGB(128, 0, 0);
+	private static final RGB DEF_HEADER = new RGB(0, 0, 128);
+	
 	public MarkdownPreferencePage() {
 		super(GRID);
 		IPreferenceStore pStore = Activator.getDefault().getPreferenceStore();
@@ -51,6 +60,11 @@ public class MarkdownPreferencePage
 		pStore.setDefault(PREF_TASK_TAGS_DEFINED, "TODO,FIXME,??");
 		pStore.setDefault(PREF_MARKDOWN_COMMAND, MARKDOWNJ);
 		pStore.setDefault(PREF_SECTION_NUMBERS, true);
+		
+		PreferenceConverter.setDefault(pStore, PREF_DEFUALT, DEF_DEFAULT);
+		PreferenceConverter.setDefault(pStore, PREF_COMMENT, DEF_COMMENT);
+		PreferenceConverter.setDefault(pStore, PREF_HEADER, DEF_HEADER);
+		
 		setPreferenceStore(pStore);
 		setDescription("Settings for the Markdown text editor. See also the general text editor preferences.");
 	}
@@ -98,6 +112,16 @@ public class MarkdownPreferencePage
 				"This should take in a file and output to std-out.\n" +
 				"Leave blank to use the built-in Java converter.", getFieldEditorParent());		
 		addField(cmd);
+		
+		ColorFieldEditor def = new ColorFieldEditor(PREF_DEFUALT, "Default text", getFieldEditorParent());
+		addField(def);
+		
+		ColorFieldEditor com = new ColorFieldEditor(PREF_COMMENT, "Comment", getFieldEditorParent());
+		addField(com);
+		
+		ColorFieldEditor head = new ColorFieldEditor(PREF_HEADER, "Header", getFieldEditorParent());
+		addField(head);
+		
 	}
 
 	/* (non-Javadoc)
