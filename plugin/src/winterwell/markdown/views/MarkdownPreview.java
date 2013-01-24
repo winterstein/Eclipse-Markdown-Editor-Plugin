@@ -4,17 +4,13 @@ package winterwell.markdown.views;
 import java.io.File;
 import java.net.URI;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.part.*;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.*;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPathEditorInput;
+import org.eclipse.ui.part.ViewPart;
 
 import winterwell.markdown.editors.ActionBarContributor;
 import winterwell.markdown.editors.MarkdownEditor;

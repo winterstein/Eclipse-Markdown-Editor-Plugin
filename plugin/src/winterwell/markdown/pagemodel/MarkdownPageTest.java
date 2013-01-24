@@ -1,7 +1,6 @@
 package winterwell.markdown.pagemodel;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 
 import winterwell.markdown.pagemodel.MarkdownPage.Header;

@@ -7,7 +7,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPathEditorInput;
-import org.eclipse.ui.internal.editors.text.FileEditorInputAdapterFactory;
 
 import winterwell.utils.io.FileUtils;
 

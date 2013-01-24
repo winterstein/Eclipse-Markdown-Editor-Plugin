@@ -3,21 +3,13 @@
  */
 package winterwell.markdown.editors;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Shell;
 
 import winterwell.markdown.StringMethods;
-import winterwell.utils.StrUtils;
 import winterwell.utils.containers.Pair;
 
 /**

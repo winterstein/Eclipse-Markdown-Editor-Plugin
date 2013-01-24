@@ -6,14 +6,11 @@
 package winterwell.markdown.pagemodel;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,11 +20,10 @@ import winterwell.markdown.Activator;
 import winterwell.markdown.StringMethods;
 import winterwell.markdown.preferences.MarkdownPreferencePage;
 import winterwell.utils.FailureException;
-import winterwell.utils.TodoException;
-import winterwell.utils.Utils;
-import winterwell.utils.StrUtils;
-import winterwell.utils.io.FileUtils;
 import winterwell.utils.Process;
+import winterwell.utils.StrUtils;
+import winterwell.utils.Utils;
+import winterwell.utils.io.FileUtils;
 
 import com.petebevin.markdown.MarkdownProcessor;
 

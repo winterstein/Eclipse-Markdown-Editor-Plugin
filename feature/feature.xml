@@ -2,21 +2,20 @@
 <feature
       id="markdown.editor.feature"
       label="Markdown Editor"
-      version="0.2.2"
+      version="0.2.3"
       provider-name="Winterwell">
 
    <description url="http://www.winterwell.com/software/markdown-editor.php">
       Support for editing the text-markup language Markdown. Also provides
-some nice enhancements to the text editor.&lt;br&gt;
-
+some nice enhancements to the text editor.
+&lt;p&gt;
 Markdown Features:
 
 - Content outline
 - Section folding
 - Export to HTML and HTML Preview
-
+&lt;p&gt;
 General Text Features:
-
 - Word wrapping
 - TODO task tags
 - Format paragraph command
@@ -33,9 +32,13 @@ Contains code from the MarkdownJ project, released under a BSD license. See http
 The Markdown syntax is copyright (c) 2004, John Gruber. It is used under a BSD-style license. See http://daringfireball.net/projects/markdown/license for more information.
    </copyright>
 
-   <license url="http://www.eclipse.org/org/documents/epl-v10.html">
+   <license url="http://www.eclipse.org/legal/epl-v10.html">
       Eclipse Public License
    </license>
+
+   <url>
+      <update label="Winterwell Eclipse Plugins (markdown)" url="http://www.winterwell.com/software/updatesite/"/>
+   </url>
 
    <plugin
          id="winterwell.markdown"

@@ -1,20 +1,9 @@
 package winterwell.markdown.editors;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorActionBarContributor;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.editors.text.TextEditorActionContributor;
-import org.eclipse.ui.internal.editors.text.PreviousPulldownActionDelegate;
-import org.eclipse.ui.part.EditorActionBarContributor;
-import org.eclipse.ui.texteditor.BasicTextEditorActionContributor;
 
 import winterwell.markdown.views.MarkdownPreview;
 
