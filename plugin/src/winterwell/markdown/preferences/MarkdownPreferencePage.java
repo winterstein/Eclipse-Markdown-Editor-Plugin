@@ -64,6 +64,7 @@ public class MarkdownPreferencePage
 		PreferenceConverter.setDefault(pStore, PREF_DEFUALT, DEF_DEFAULT);
 		PreferenceConverter.setDefault(pStore, PREF_COMMENT, DEF_COMMENT);
 		PreferenceConverter.setDefault(pStore, PREF_HEADER, DEF_HEADER);
+		PreferenceConverter.setDefault(pStore, PREF_HEADER, DEF_LINK);
 		
 		setPreferenceStore(pStore);
 		setDescription("Settings for the Markdown text editor. See also the general text editor preferences.");
