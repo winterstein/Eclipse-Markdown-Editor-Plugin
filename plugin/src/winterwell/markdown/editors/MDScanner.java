@@ -32,18 +32,23 @@ public class MDScanner extends RuleBasedScanner {
     	Token heading = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_HEADER)), null, SWT.BOLD));
     	Token comment = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_COMMENT))));
     	Token emphasis = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_DEFUALT)), null, SWT.ITALIC));
-        setRules(new IRule[] {           
+    	Token list = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_HEADER)), null, SWT.BOLD));
+    	Token link = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_LINK)), null, TextAttribute.UNDERLINE));
+        setRules(new IRule[] {
+           new LinkRule(link),
            new HeaderRule(heading),
+           new ListRule(list),
            new EmphasisRule("_", emphasis),
            new EmphasisRule("***", emphasis),
            new EmphasisRule("**", emphasis),
            new EmphasisRule("*", emphasis),
            new MultiLineRule("<!--", "-->", comment),
-           new WhitespaceRule(new IWhitespaceDetector() {
-              public boolean isWhitespace(char c) {
-                 return Character.isWhitespace(c);
-              }
-           }),
+           // WhitespaceRule messes up with the rest of rules
+//           new WhitespaceRule(new IWhitespaceDetector() {
+//              public boolean isWhitespace(char c) {
+//                 return Character.isWhitespace(c);
+//              }
+//           }),
         });
      }
 }
