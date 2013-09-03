@@ -1,123 +1,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.winterwell</groupId>
+	
+	<parent>
+		<groupId>com.winterwell.markdown</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.2.3</version>
+	</parent>
+	
 	<artifactId>winterwell.markdown</artifactId>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<packaging>eclipse-plugin</packaging>
 
 	<name>markdown-editor</name>
 	<description>Markdown Editor Plugin for Eclipse</description>
 
-	<organization>
-		<name>Winterwell Associates Ltd</name>
-		<url>http://www.winterwell.com</url>
-	</organization>
-
-	<developers>
-		<developer>
-			<id>daniel.winterstein</id>
-			<name>Daniel Winterstein</name>
-			<email>daniel@winterwell.com</email>
-			<organization>Winterwell Associates Ltd</organization>
-			<roles>
-				<role>Lead Developer</role>
-			</roles>
-			<timezone>0</timezone>
-		</developer>
-	</developers>
-
-	<properties>
-
-		<!-- PROJECT SETTINGS -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-		<!-- PLUGIN VERSIONS -->
-		<version.tycho>0.15.0</version.tycho>
-		<version.compiler>2.5.1</version.compiler>
-		<version.resources>2.5</version.resources>
-
-	</properties>
-
 	<build>
 		<sourceDirectory>src</sourceDirectory>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${version.compiler}</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>${version.resources}</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-maven-plugin</artifactId>
-				<version>${version.tycho}</version>
-				<extensions>true</extensions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>target-platform-configuration</artifactId>
-				<version>${version.tycho}</version>
-				<configuration>
-					<environments>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86_64</arch>
-						</environment>
-					</environments>
-				</configuration>
-
-			</plugin>
-		</plugins>
 	</build>
 
-	<repositories>
-
-		<!-- ECLIPSE 3.7 -->
-		<repository>
-			<id>eclipse-indigo</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/indigo</url>
-		</repository>
-
-	</repositories>
 
 </project>
 
