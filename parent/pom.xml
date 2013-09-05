@@ -3,9 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.winterwell.markdown</groupId>
-	<artifactId>parent</artifactId>
+	<artifactId>markdown.editor.parent</artifactId>
 	<version>0.2.3</version>
 	<packaging>pom</packaging>
+	<name>Markdown Editor (parent)</name>
 
 	<organization>
 		<name>Winterwell Associates Ltd</name>
@@ -45,9 +46,9 @@
 
 
 	<modules>
-		<module>plugin</module>
-		<module>feature</module>
-		<module>site</module>
+		<module>../plugin</module>
+		<module>../feature</module>
+		<module>../site</module>
 	</modules>
 
 	<repositories>
