@@ -4,21 +4,16 @@
 	
 	<parent>
 		<groupId>com.winterwell.markdown</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>markdown.editor.parent</artifactId>
 		<version>0.2.3</version>
+		<relativePath>../parent</relativePath>
 	</parent>
 	
 	<artifactId>winterwell.markdown</artifactId>
-	<version>0.2.3</version>
 	<packaging>eclipse-plugin</packaging>
 
-	<name>markdown-editor</name>
+	<name>Markdown Editor (plugin)</name>
 	<description>Markdown Editor Plugin for Eclipse</description>
-
-	<build>
-		<sourceDirectory>src</sourceDirectory>
-	</build>
-
 
 </project>
 

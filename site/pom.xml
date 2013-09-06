@@ -6,8 +6,9 @@
 
 	<parent>
 		<groupId>com.winterwell.markdown</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>markdown.editor.parent</artifactId>
 		<version>0.2.3</version>
+		<relativePath>../parent</relativePath>
 	</parent>
 
 	<artifactId>markdown.editor.site</artifactId>
