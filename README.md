@@ -4,7 +4,10 @@ Edit .md and .txt files with outlines & syntax highlighting.
 Preview HTML.
 
 Please see the website for information:
-http://www.winterwell.com/software/markdown-editor.php
+<http://www.winterwell.com/software/markdown-editor.php>
+
+Eclipse Marketplace entry
+<http://marketplace.eclipse.org/content/markdown-text-editor>
 
 ## Eclipse Dev Details
 
@@ -21,7 +24,7 @@ Main Editor class `winterwell.markdown.editors.MarkdownEditor` defined as
 
 ### Build
 
-`mvn package`
+	cd parent
+	mvn package
       
-[ERROR] Failed to execute goal org.eclipse.tycho:tycho-packaging-plugin:0.18.1:package-plugin (default-package-plugin)
- on project winterwell.markdown: Error assembling JAR: A zip file cannot include itself -> [Help 1]      
+then check `site\target` directory for update site arcive `markdown.editor.site-x.x.x.zip` and p2 repository
