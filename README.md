@@ -27,4 +27,4 @@ Main Editor class `winterwell.markdown.editors.MarkdownEditor` defined as
 	cd parent
 	mvn package
       
-then check `site\target` directory for update site arcive `markdown.editor.site-x.x.x.zip` and p2 repository
+then check `site\target` directory for update site archive `markdown.editor.site-x.x.x.zip` and p2 repository
