@@ -1,4 +1,7 @@
+
 # Eclipse Markdown Test Editor Plugin
+
+[![Build Status](https://secure.travis-ci.org/Nodeclipse/Eclipse-Markdown-Editor-Plugin.png)](http://travis-ci.org/Nodeclipse/Eclipse-Markdown-Editor-Plugin)
 
 Edit .md and .txt files with outlines & syntax highlighting.  
 Preview HTML.
@@ -6,10 +9,12 @@ Preview HTML.
 Please see the website for information:
 <http://www.winterwell.com/software/markdown-editor.php>
 
-Eclipse Marketplace entry
+Eclipse Marketplace entry:
 <http://marketplace.eclipse.org/content/markdown-text-editor>
 
 ## Eclipse Dev Details
+
+![](overview.png)
 
 Main Editor class `winterwell.markdown.editors.MarkdownEditor` defined as
 
@@ -24,7 +29,6 @@ Main Editor class `winterwell.markdown.editors.MarkdownEditor` defined as
 
 ### Build
 
-	cd parent
 	mvn package
       
 then check `site\target` directory for update site archive `markdown.editor.site-x.x.x.zip` and p2 repository
