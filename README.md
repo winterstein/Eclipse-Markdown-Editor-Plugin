@@ -1,7 +1,6 @@
-
 # Eclipse Markdown Test Editor Plugin
 
-[![Build Status](https://secure.travis-ci.org/Nodeclipse/Eclipse-Markdown-Editor-Plugin.png)](http://travis-ci.org/Nodeclipse/Eclipse-Markdown-Editor-Plugin)
+[![Build Status](https://secure.travis-ci.org/winterstein/Eclipse-Markdown-Editor-Plugin.png)](http://travis-ci.org/winterstein/Eclipse-Markdown-Editor-Plugin)
 
 Edit .md and .txt files with outlines & syntax highlighting.  
 Preview HTML.
