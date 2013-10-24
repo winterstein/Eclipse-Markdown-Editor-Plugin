@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/markdown.editor.feature_0.2.3.jar" id="markdown.editor.feature" version="0.2.3">
+   <feature url="features/markdown.editor.feature_1.0.0.jar" id="markdown.editor.feature" version="1.0.0">
       <category name="markdowneditor"/>
    </feature>
    <category-def name="markdowneditor" label="Markdown Editor">
