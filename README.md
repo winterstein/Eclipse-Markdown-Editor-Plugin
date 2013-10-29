@@ -11,6 +11,10 @@ Please see the website for information:
 Eclipse Marketplace entry:
 <http://marketplace.eclipse.org/content/markdown-text-editor>
 
+There is also complementary Github Flavoured Markdown Viewer
+<https://github.com/satyagraha/gfm_viewer>
+
+
 ## Eclipse Dev Details
 
 ![](overview.png)
