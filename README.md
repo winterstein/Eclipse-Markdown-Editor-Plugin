@@ -1,4 +1,4 @@
-# Eclipse Markdown Test Editor Plugin
+# Eclipse Markdown Editor Plugin
 
 [![Build Status](https://secure.travis-ci.org/winterstein/Eclipse-Markdown-Editor-Plugin.png)](http://travis-ci.org/winterstein/Eclipse-Markdown-Editor-Plugin)
 
@@ -34,4 +34,6 @@ Main Editor class `winterwell.markdown.editors.MarkdownEditor` defined as
 
 	mvn package
       
-then check `site\target` directory for update site archive `markdown.editor.site-x.x.x.zip` and p2 repository
+then check `site\target` directory for update site archive `markdown.editor.site-x.x.x.zip` and p2 repository.
+Use Help -> Install New Software... -> Add... -> Archive to istall from .zip file.
+
