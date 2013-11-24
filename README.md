@@ -1,6 +1,10 @@
 # Eclipse Markdown Editor Plugin
 
 [![Build Status](https://secure.travis-ci.org/winterstein/Eclipse-Markdown-Editor-Plugin.png)](http://travis-ci.org/winterstein/Eclipse-Markdown-Editor-Plugin)
+<a href="http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=369" 
+title="Drag and drop into a running Eclipse toolbar area to install Markdown Text Editor">
+  <img src="https://marketplace.eclipse.org/sites/all/modules/custom/marketplace/images/installbutton.png"/>
+</a>
 
 Edit .md and .txt files with outlines & syntax highlighting.  
 Preview HTML.
