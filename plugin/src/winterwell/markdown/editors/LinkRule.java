@@ -66,6 +66,12 @@ public class LinkRule implements IRule {
 				return Token.UNDEFINED;
 			}
 			
+			//+ preventing NPE (Non-standard link should not be below as comment above suggests) by Paul Verest
+			if (fDelimiters == null) {
+				scanner.unread();
+				return Token.UNDEFINED;
+			}
+			
 			// Non-standard link
 			while ((c = scanner.read()) != ICharacterScanner.EOF && !Character.isWhitespace(c)) {
 				for (int i = 0; i < fDelimiters.length; i++) {
