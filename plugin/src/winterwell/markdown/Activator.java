@@ -27,6 +27,13 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		doInstall();
+	}
+
+	// ?? Have this method called by start(), saving a reminder so it doesn't repeat itself?? 
+	private void doInstall() {
+		// ??Try to make this the default for file types -- but is this possible??
+		// c.f. http://stackoverflow.com/questions/15877123/eclipse-rcp-programmatically-associate-file-type-with-editor
 	}
 
 	/*

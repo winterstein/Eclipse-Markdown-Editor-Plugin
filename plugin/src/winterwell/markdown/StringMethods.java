@@ -78,8 +78,6 @@ public final class StringMethods {
 	 */
 	public static final String LINEEND = System.getProperty("line.separator");
 
-	private static final Pattern abc = Pattern.compile("\\S");
-
 	/**
 	 * @param s
 	 * @return A version of s where the first letter is uppercase and all others
@@ -432,28 +430,6 @@ public final class StringMethods {
 		md5.update(string.getBytes());
 		BigInteger hash = new BigInteger(1, md5.digest());
 		return hash.toString(16);
-	}
-
-	/**
-	 * Escape some of the characters that are meaningful to the regex engine.
-	 * (i.e. create a string that will be treated by replace as if it were
-	 * literally the input string).
-	 * 
-	 * @see Pattern
-	 * @param s
-	 * @return
-	 */
-	public static final String regexEsc(String s) {
-		// these daft looking replacements should create the right level of
-		// escaping for \ characters
-		s = s.replace("\\", "\\\\"); // replaces \ in s with \\,
-		// honest.
-		s = s.replace("$", "\\$"); // replaces $ in s with \$
-		s = s.replace("^", "\\^"); // replaces ^ in s with \^
-		s = s.replace("|", "\\|"); // replaces | in s with \|
-		s = s.replace("(", "\\("); // replaces ( in s with \(
-		s = s.replace(")", "\\)"); // replaces ) in s with \)
-		return s;
 	}
 
 	/**

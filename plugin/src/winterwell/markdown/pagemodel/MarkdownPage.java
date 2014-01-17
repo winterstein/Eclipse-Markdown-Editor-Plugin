@@ -210,7 +210,7 @@ public class MarkdownPage {
 
 	private boolean multiMarkdownSupport = true;
 	// TODO meta-data, footnotes, tables, link & image attributes
-	private static Pattern multiMarkdownTag = Pattern.compile("(.*):(.*)");
+	private static Pattern multiMarkdownTag = Pattern.compile("(.+):(.*)");
 	private Map<String, String> multiMarkdownTags = new HashMap<String, String>();
 
 	/**
