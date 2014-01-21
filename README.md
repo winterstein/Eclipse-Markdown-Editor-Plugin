@@ -41,3 +41,4 @@ Main Editor class `winterwell.markdown.editors.MarkdownEditor` defined as
 then check `site\target` directory for update site archive `markdown.editor.site-x.x.x.zip` and p2 repository.
 Use Help -> Install New Software... -> Add... -> Archive to istall from .zip file.
 
+<a href="http://with-eclipse.github.io/" target="_blank"><img alt="with-Eclipse logo" src="http://with-eclipse.github.io/with-eclipse-1.jpg" /></a>
