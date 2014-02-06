@@ -46,10 +46,12 @@ public class MarkdownPreferencePage
 	public static final String PREF_COMMENT = "Pref_Comment";
 	public static final String PREF_HEADER = "Pref_Header";
 	public static final String PREF_LINK = "Pref_Link";
+	public static final String PREF_CODE = "Pref_Code";
 	private static final RGB DEF_DEFAULT = new RGB(0, 0, 0);
 	private static final RGB DEF_COMMENT = new RGB(128, 0, 0);
 	private static final RGB DEF_HEADER = new RGB(0, 128, 0);
 	private static final RGB DEF_LINK = new RGB(0, 0, 128);
+	private static final RGB DEF_CODE = new RGB(128, 128, 128);
 	
 	public MarkdownPreferencePage() {
 		super(GRID);
@@ -65,6 +67,7 @@ public class MarkdownPreferencePage
 		PreferenceConverter.setDefault(pStore, PREF_COMMENT, DEF_COMMENT);
 		PreferenceConverter.setDefault(pStore, PREF_HEADER, DEF_HEADER);
 		PreferenceConverter.setDefault(pStore, PREF_HEADER, DEF_LINK);
+		PreferenceConverter.setDefault(pStore, PREF_CODE, DEF_CODE);
 		
 		setPreferenceStore(pStore);
 		setDescription("Settings for the Markdown text editor. See also the general text editor preferences.");
@@ -126,6 +129,8 @@ public class MarkdownPreferencePage
 		ColorFieldEditor head = new ColorFieldEditor(PREF_HEADER, "Header and List indicator", getFieldEditorParent());
 		addField(head);
 		
+		ColorFieldEditor code = new ColorFieldEditor(PREF_CODE, "Code", getFieldEditorParent());
+		addField(code);
 	}
 
 	/* (non-Javadoc)
