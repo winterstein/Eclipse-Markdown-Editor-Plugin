@@ -13,7 +13,8 @@ Please see the website for information:
 <http://www.winterwell.com/software/markdown-editor.php>
 
 Eclipse Marketplace entry:
-<http://marketplace.eclipse.org/content/markdown-text-editor>
+<http://marketplace.eclipse.org/content/markdown-text-editor>  
+or install with [Nodeclipse CLI Installer](https://github.com/Nodeclipse/nodeclipse-1/tree/master/org.nodeclipse.ui/templates) 'nodeclipse install markdown'
 
 There is also complementary Github Flavoured Markdown Viewer
 <https://github.com/satyagraha/gfm_viewer>
