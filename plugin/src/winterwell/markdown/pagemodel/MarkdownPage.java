@@ -336,7 +336,7 @@ public class MarkdownPage {
 	 * @return true if line is just cs (and whitespace at the start/end)
 	 */
 	boolean just(String line, char c) {
-		return line.matches("\\s*c+\\s*");
+		return line.matches("\\s*"+c+"+\\s*");
 	}
 
 	/**
