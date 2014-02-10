@@ -38,6 +38,7 @@ public class MDScanner extends RuleBasedScanner {
         setRules(new IRule[] {
            new LinkRule(link),
            new HeaderRule(heading),
+           new HeaderWithUnderlineRule(heading),
            new ListRule(list),
            new EmphasisRule("_", emphasis),
            new EmphasisRule("***", emphasis),
