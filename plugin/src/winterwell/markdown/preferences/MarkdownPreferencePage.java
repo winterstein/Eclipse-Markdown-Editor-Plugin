@@ -66,7 +66,7 @@ public class MarkdownPreferencePage
 		PreferenceConverter.setDefault(pStore, PREF_DEFUALT, DEF_DEFAULT);
 		PreferenceConverter.setDefault(pStore, PREF_COMMENT, DEF_COMMENT);
 		PreferenceConverter.setDefault(pStore, PREF_HEADER, DEF_HEADER);
-		PreferenceConverter.setDefault(pStore, PREF_HEADER, DEF_LINK);
+		PreferenceConverter.setDefault(pStore, PREF_LINK, DEF_LINK);
 		PreferenceConverter.setDefault(pStore, PREF_CODE, DEF_CODE);
 		
 		setPreferenceStore(pStore);
