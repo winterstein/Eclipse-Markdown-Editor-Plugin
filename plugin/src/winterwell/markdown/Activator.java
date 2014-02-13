@@ -3,6 +3,8 @@ package winterwell.markdown;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import winterwell.markdown.preferences.MarkdownPreferencePage;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -28,6 +30,7 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		doInstall();
+		MarkdownPreferencePage.setDefaultPreferences(getPreferenceStore());
 	}
 
 	// ?? Have this method called by start(), saving a reminder so it doesn't repeat itself?? 

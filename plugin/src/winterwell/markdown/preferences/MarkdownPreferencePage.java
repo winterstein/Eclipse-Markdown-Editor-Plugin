@@ -59,6 +59,12 @@ public class MarkdownPreferencePage
 	public MarkdownPreferencePage() {
 		super(GRID);
 		IPreferenceStore pStore = Activator.getDefault().getPreferenceStore();
+		setDefaultPreferences(pStore);
+		setPreferenceStore(pStore);
+		setDescription("Settings for the Markdown text editor. See also the general text editor preferences.");
+	}
+	
+	public static void setDefaultPreferences(IPreferenceStore pStore) {
 		pStore.setDefault(PREF_WORD_WRAP, false);
 		pStore.setDefault(PREF_FOLDING, true);
 		pStore.setDefault(PREF_TASK_TAGS, true);
@@ -71,9 +77,7 @@ public class MarkdownPreferencePage
 		PreferenceConverter.setDefault(pStore, PREF_HEADER, DEF_HEADER);
 		PreferenceConverter.setDefault(pStore, PREF_LINK, DEF_LINK);
 		PreferenceConverter.setDefault(pStore, PREF_CODE, DEF_CODE);
-		
-		setPreferenceStore(pStore);
-		setDescription("Settings for the Markdown text editor. See also the general text editor preferences.");
+		PreferenceConverter.setDefault(pStore, PREF_CODE_BG, DEF_CODE_BG);
 	}
 	
 	/**
