@@ -25,7 +25,7 @@ public class EmphasisRule implements IRule {
 
 	public EmphasisRule(String marker, IToken token) {
 		assert marker.equals("*") || marker.equals("_") || marker.equals("**")
-				|| marker.equals("***");
+				|| marker.equals("***") || marker.equals("`") || marker.equals("``");
 		Assert.isNotNull(token);
 		fSequence = marker.toCharArray();
 		fToken = token;

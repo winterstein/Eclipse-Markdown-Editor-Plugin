@@ -47,15 +47,24 @@ public class MarkdownPreferencePage
 	public static final String PREF_HEADER = "Pref_Header";
 	public static final String PREF_LINK = "Pref_Link";
 	public static final String PREF_CODE = "Pref_Code";
+	public static final String PREF_CODE_BG = "Pref_Code_Background";
+	
 	private static final RGB DEF_DEFAULT = new RGB(0, 0, 0);
 	private static final RGB DEF_COMMENT = new RGB(128, 0, 0);
 	private static final RGB DEF_HEADER = new RGB(0, 128, 0);
-	private static final RGB DEF_LINK = new RGB(0, 0, 128);
-	private static final RGB DEF_CODE = new RGB(128, 128, 128);
+	private static final RGB DEF_LINK = new RGB(106, 131, 199);
+	private static final RGB DEF_CODE = new RGB(0, 0, 0);
+	private static final RGB DEF_CODE_BG = new RGB(244,244,244);
 	
 	public MarkdownPreferencePage() {
 		super(GRID);
 		IPreferenceStore pStore = Activator.getDefault().getPreferenceStore();
+		setDefaultPreferences(pStore);
+		setPreferenceStore(pStore);
+		setDescription("Settings for the Markdown text editor. See also the general text editor preferences.");
+	}
+	
+	public static void setDefaultPreferences(IPreferenceStore pStore) {
 		pStore.setDefault(PREF_WORD_WRAP, false);
 		pStore.setDefault(PREF_FOLDING, true);
 		pStore.setDefault(PREF_TASK_TAGS, true);
@@ -66,11 +75,9 @@ public class MarkdownPreferencePage
 		PreferenceConverter.setDefault(pStore, PREF_DEFUALT, DEF_DEFAULT);
 		PreferenceConverter.setDefault(pStore, PREF_COMMENT, DEF_COMMENT);
 		PreferenceConverter.setDefault(pStore, PREF_HEADER, DEF_HEADER);
-		PreferenceConverter.setDefault(pStore, PREF_HEADER, DEF_LINK);
+		PreferenceConverter.setDefault(pStore, PREF_LINK, DEF_LINK);
 		PreferenceConverter.setDefault(pStore, PREF_CODE, DEF_CODE);
-		
-		setPreferenceStore(pStore);
-		setDescription("Settings for the Markdown text editor. See also the general text editor preferences.");
+		PreferenceConverter.setDefault(pStore, PREF_CODE_BG, DEF_CODE_BG);
 	}
 	
 	/**
@@ -131,6 +138,9 @@ public class MarkdownPreferencePage
 		
 		ColorFieldEditor code = new ColorFieldEditor(PREF_CODE, "Code", getFieldEditorParent());
 		addField(code);
+
+		ColorFieldEditor codeBg = new ColorFieldEditor(PREF_CODE_BG, "Code Background", getFieldEditorParent());
+		addField(codeBg);
 	}
 
 	/* (non-Javadoc)
