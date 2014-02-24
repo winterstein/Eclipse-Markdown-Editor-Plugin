@@ -42,4 +42,9 @@ Main Editor class `winterwell.markdown.editors.MarkdownEditor` defined as
 then check `site\target` directory for update site archive `markdown.editor.site-x.x.x.zip` and p2 repository.
 Use Help -> Install New Software... -> Add... -> Archive to istall from .zip file.
 
+Increase version
+
+	mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=1.1.0-SNAPSHOT
+
+
 <a href="http://with-eclipse.github.io/" target="_blank"><img alt="with-Eclipse logo" src="http://with-eclipse.github.io/with-eclipse-1.jpg" /></a>
