@@ -22,6 +22,10 @@ There is also complementary Github Flavoured Markdown Viewer
 
 ## Eclipse Dev Details
 
+You need Eclipse with PDE, e.g. Eclipse Standard
+
+
+
 ![](overview.png)
 
 Main Editor class `winterwell.markdown.editors.MarkdownEditor` defined as
