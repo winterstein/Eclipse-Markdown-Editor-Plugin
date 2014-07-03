@@ -20,6 +20,16 @@ There is also complementary Github Flavoured Markdown Viewer
 <https://github.com/satyagraha/gfm_viewer>
 
 
+## Usage
+
+![](http://marketplace.eclipse.org/sites/default/files/Markdown-Editor-1.1.0.PNG)
+
+Note that for HTML preview OS internal browser is used, e.g. Internet Explorer on Windows; if you use Ubuntu or other Linux distros, we recommend the WebKit browser; see:
+
+- <http://www.eclipse.org/swt/faq.php#browserlinuxrcp>
+- <http://www.eclipse.org/swt/faq.php#browserlinux>
+- <http://tronprog.blogspot.de/2012/05/eclipse-internal-web-browser-in-kubuntu.html>
+
 ## Eclipse Dev Details
 
 You need Eclipse with PDE, e.g. Eclipse Standard
