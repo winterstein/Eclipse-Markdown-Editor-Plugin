@@ -49,6 +49,8 @@ public class MarkdownPreferencePage
 	public static final String PREF_CODE = "Pref_Code";
 	public static final String PREF_CODE_BG = "Pref_Code_Background";
 	
+	public static final String PREF_GITHUB_SYNTAX = "Pref_Github_Syntax";
+	
 	private static final RGB DEF_DEFAULT = new RGB(0, 0, 0);
 	private static final RGB DEF_COMMENT = new RGB(128, 0, 0);
 	private static final RGB DEF_HEADER = new RGB(0, 128, 0);
@@ -71,6 +73,7 @@ public class MarkdownPreferencePage
 		pStore.setDefault(PREF_TASK_TAGS_DEFINED, "TODO,FIXME,??");
 		pStore.setDefault(PREF_MARKDOWN_COMMAND, MARKDOWNJ);
 		pStore.setDefault(PREF_SECTION_NUMBERS, true);
+		pStore.setDefault(PREF_GITHUB_SYNTAX, true);
 		
 		PreferenceConverter.setDefault(pStore, PREF_DEFUALT, DEF_DEFAULT);
 		PreferenceConverter.setDefault(pStore, PREF_COMMENT, DEF_COMMENT);
@@ -141,6 +144,16 @@ public class MarkdownPreferencePage
 
 		ColorFieldEditor codeBg = new ColorFieldEditor(PREF_CODE_BG, "Code Background", getFieldEditorParent());
 		addField(codeBg);
+		
+		/*
+		 * Fields for the preview window
+		 */
+
+		// Github Syntax support
+		fd = new BooleanFieldEditor(PREF_GITHUB_SYNTAX,
+				"Support Github Syntax",
+				getFieldEditorParent());
+		addField(fd);
 	}
 
 	/* (non-Javadoc)

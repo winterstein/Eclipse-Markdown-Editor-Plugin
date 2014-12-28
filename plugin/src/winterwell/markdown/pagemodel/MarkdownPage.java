@@ -246,6 +246,8 @@ public class MarkdownPage {
 		Header currentHeader = dummyTopHeader;		
 		// Identify line types		
 		int lineNum = 0;
+		IPreferenceStore pStore = Activator.getDefault().getPreferenceStore();
+
 		// Multi-markdown header
 		if (multiMarkdownSupport) {
 			// The key is the text before the colon, and the data is the text
@@ -327,6 +329,32 @@ public class MarkdownPage {
 		// Remove dummy header?
 		if (dummyTopHeader.getSubHeaders().size() == 0) {
 			level1Headers.remove(dummyTopHeader);
+		}
+		
+		boolean githubSyntaxSupport =
+				pStore.getBoolean(MarkdownPreferencePage.PREF_GITHUB_SYNTAX);
+		if (githubSyntaxSupport) {
+			/*
+			 * Support Code block
+			 */
+			boolean inCodeBlock = false;
+			for (lineNum = 0; lineNum < lines.size(); lineNum++) {
+				String line = lines.get(lineNum);
+				// Found the start or end of a code block
+				if (line.matches("^```.*\n")) {
+					// We reverse the boolean value
+					inCodeBlock = !inCodeBlock;
+
+					// We force the line to be blank. But we mark it as normal
+					// to prevent to be stripped
+					lines.set(lineNum, "\n");
+					lineTypes.set(lineNum, KLineType.NORMAL);
+					continue;
+				}
+				if (inCodeBlock) {
+					lines.set(lineNum, "    " + line);
+				}
+			}
 		}
 	}
 
