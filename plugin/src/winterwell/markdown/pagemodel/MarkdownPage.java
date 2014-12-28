@@ -212,12 +212,16 @@ public class MarkdownPage {
 	// TODO meta-data, footnotes, tables, link & image attributes
 	private static Pattern multiMarkdownTag = Pattern.compile("(.+):(.*)");
 	private Map<String, String> multiMarkdownTags = new HashMap<String, String>();
+	
+	// Regular expression for Github support
+	private static Pattern githubURLDetection = Pattern.compile("((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])");
 
 	/**
 	 * The top-level headers. FIXME handle documents which have a 2nd level
 	 * header before any 1st level ones
 	 */
 	private final List<Header> level1Headers = new ArrayList<Header>();
+	private final IPreferenceStore pStore;
 
 	/**
 	 * Create a page.
@@ -225,6 +229,7 @@ public class MarkdownPage {
 	 * @param text
 	 */
 	public MarkdownPage(String text) {
+		pStore = Activator.getDefault().getPreferenceStore();
 		setText(text);
 	}
 
@@ -246,7 +251,6 @@ public class MarkdownPage {
 		Header currentHeader = dummyTopHeader;		
 		// Identify line types		
 		int lineNum = 0;
-		IPreferenceStore pStore = Activator.getDefault().getPreferenceStore();
 
 		// Multi-markdown header
 		if (multiMarkdownSupport) {
@@ -355,6 +359,63 @@ public class MarkdownPage {
 					lines.set(lineNum, "    " + line);
 				}
 			}
+			
+			/*
+			 * Support for URL Detection
+			 * We search for links that are not captured by Markdown syntax
+			 */
+			for (lineNum = 0; lineNum < lines.size(); lineNum++) {
+				String line = lines.get(lineNum);
+				// When a link has been replaced we need to scan again the string
+				// as the offsets have changed (we add '<' and '>' to the link to
+				// be interpreted by the markdown library)
+				boolean urlReplaced;
+
+				do {
+					urlReplaced = false;
+					Matcher m = githubURLDetection.matcher(line);
+					while (m.find()) {
+						// Ignore the URL following the format <link>
+						if ((m.start() - 1 >= 0) && (m.end() < line.length()) &&
+							(line.charAt(m.start() - 1) == '<') &&
+							(line.charAt(m.end()) == '>'))
+						{
+							continue;
+						}
+	
+						// Ignore the URL following the format [description](link)
+						if ((m.start() - 2 >= 0) && (m.end() < line.length()) &&
+							(line.charAt(m.start() - 2) == ']') &&
+							(line.charAt(m.start() - 1) == '(') &&
+							(line.charAt(m.end()) == ')'))
+						{
+							continue;
+						}
+	
+						// Ignore the URL following the format [description](link "title")
+						if ((m.start() - 2 >= 0) && (m.end() + 1 < line.length()) &&
+							(line.charAt(m.start() - 2) == ']') &&
+							(line.charAt(m.start() - 1) == '(') &&
+							(line.charAt(m.end()) == ' ') &&
+							(line.charAt(m.end() + 1) == '"'))
+						{
+							continue;
+						}
+						
+						if (m.start() - 1 >= 0) {
+							// Case when the link is at the beginning of the string
+							line = line.substring(0, m.start()) + "<" + m.group(0) + ">" + line.substring(m.end());
+						} else {
+							line = "<" + m.group(0) + ">" + line.substring(m.end());
+						}
+						
+						// We replaced the string in the array
+						lines.set(lineNum, line);
+						urlReplaced = true;
+						break;
+					}
+				} while (urlReplaced);
+			}
 		}
 	}
 
@@ -433,7 +494,6 @@ public class MarkdownPage {
 	 * Get the HTML for this page. Uses the MarkdownJ project.
 	 */
 	public String html() {
-		IPreferenceStore pStore = Activator.getDefault().getPreferenceStore();
 		// Section numbers??
 		boolean sectionNumbers = pStore
 				.getBoolean(MarkdownPreferencePage.PREF_SECTION_NUMBERS);
