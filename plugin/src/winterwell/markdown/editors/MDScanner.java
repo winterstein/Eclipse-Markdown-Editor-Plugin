@@ -34,14 +34,21 @@ public class MDScanner extends RuleBasedScanner {
     	Token emphasis = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_DEFUALT)), null, SWT.ITALIC));
     	Token list = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_HEADER)), null, SWT.BOLD));
     	Token link = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_LINK)), null, TextAttribute.UNDERLINE));
+    	Token code = new Token(new TextAttribute(
+    			cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_CODE)),
+    			cm.getColor(PreferenceConverter.getColor(pStore, MarkdownPreferencePage.PREF_CODE_BG)),
+    			SWT.NORMAL));
         setRules(new IRule[] {
            new LinkRule(link),
            new HeaderRule(heading),
+           new HeaderWithUnderlineRule(heading),
            new ListRule(list),
            new EmphasisRule("_", emphasis),
            new EmphasisRule("***", emphasis),
            new EmphasisRule("**", emphasis),
            new EmphasisRule("*", emphasis),
+           new EmphasisRule("``", code),
+           new EmphasisRule("`", code),
            new MultiLineRule("<!--", "-->", comment),
            // WhitespaceRule messes up with the rest of rules
 //           new WhitespaceRule(new IWhitespaceDetector() {

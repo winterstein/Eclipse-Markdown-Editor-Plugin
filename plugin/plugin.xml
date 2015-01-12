@@ -13,6 +13,28 @@
             id="winterwell.markdown.editors.MarkdownEditor">
       </editor>
    </extension>
+   
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:winterwell.markdown.views.MarkdownPreview">
+         <command
+               commandId="winterwell.markdown.commands.Preferences"
+               icon="icons/settings16_yellow.png"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="winterwell.markdown.commands.Preferences"
+            id="winterwell.markdown.commands.Preferences"
+            name="Preferences">
+      </command>
+   </extension>
+   
    <extension
          point="org.eclipse.ui.views">
       <category

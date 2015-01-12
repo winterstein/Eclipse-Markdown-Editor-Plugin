@@ -44,6 +44,7 @@ import winterwell.markdown.Activator;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.pagemodel.MarkdownPage.Header;
 import winterwell.markdown.preferences.MarkdownPreferencePage;
+import winterwell.markdown.views.MarkdownPreview;
 
 
 /**
@@ -161,7 +162,14 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener
 		haveRunFolding = false;
 		updateSectionFoldingAnnotations(null);
 	}
-	
+
+	@Override
+	protected void editorSaved() {
+		if (MarkdownPreview.preview != null) {
+			// Update the preview when the file is saved
+			MarkdownPreview.preview.update();
+		}
+	}
 
 	public Object getAdapter(Class required) {
 		if (IContentOutlinePage.class.equals(required)) {
