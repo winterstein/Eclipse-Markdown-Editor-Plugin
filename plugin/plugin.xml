@@ -20,6 +20,11 @@
             allPopups="false"
             locationURI="toolbar:winterwell.markdown.views.MarkdownPreview">
          <command
+               commandId="winterwell.markdown.commands.OpenGfmView"
+               icon="icons/github-cat_yellow.png"
+               style="push">
+         </command>
+         <command
                commandId="winterwell.markdown.commands.Preferences"
                icon="icons/settings16_yellow.png"
                style="push">
@@ -28,6 +33,11 @@
    </extension>
    <extension
          point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="winterwell.markdown.commands.OpenGfmView"
+            id="winterwell.markdown.commands.OpenGfmView"
+            name="Open GitHub Flavored Markdown View">
+      </command>
       <command
             defaultHandler="winterwell.markdown.commands.Preferences"
             id="winterwell.markdown.commands.Preferences"
@@ -45,7 +55,7 @@
             class="winterwell.markdown.views.MarkdownPreview"
             icon="icons/notepad.gif"
             id="winterwell.markdown.views.MarkdownPreview"
-            name="Markdown HTML Preview"/>
+            name="Markdown View"/>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
