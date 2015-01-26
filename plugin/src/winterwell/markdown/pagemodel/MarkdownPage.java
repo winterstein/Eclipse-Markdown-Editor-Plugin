@@ -208,9 +208,8 @@ public class MarkdownPage {
 	private List<KLineType> lineTypes;
 	private Map<Integer,Object> pageObjects = new HashMap<Integer, Object>();
 
-	private boolean multiMarkdownSupport = true;
 	// TODO meta-data, footnotes, tables, link & image attributes
-	private static Pattern multiMarkdownTag = Pattern.compile("(.+):(.*)");
+	private static Pattern multiMarkdownTag = Pattern.compile("^([\\w].*):(.*)");
 	private Map<String, String> multiMarkdownTags = new HashMap<String, String>();
 	
 	// Regular expression for Github support
@@ -252,8 +251,12 @@ public class MarkdownPage {
 		// Identify line types		
 		int lineNum = 0;
 
+		// Check if we should support the Multi-Markdown Metadata
+		boolean multiMarkdownMetadataSupport =
+				pStore.getBoolean(MarkdownPreferencePage.PREF_MULTIMARKDOWN_METADATA);
+		
 		// Multi-markdown header
-		if (multiMarkdownSupport) {
+		if (multiMarkdownMetadataSupport) {
 			// The key is the text before the colon, and the data is the text
 			// after the
 			// colon. In the above example, notice that there are two lines of
@@ -267,28 +270,59 @@ public class MarkdownPage {
 			// ends with the first whitespace only line. The metadata is
 			// stripped from the
 			// document before it is passed on to the syntax parser.
-			String data = "";
-			String tag = "";
-			for (; lineNum < lines.size(); lineNum++) {
+			
+			//
+			// Check if the Metdatas are valid
+			//
+			boolean validMetadata = true;
+			for (lineNum = 0; lineNum < lines.size(); lineNum++) {
 				String line = lines.get(lineNum);
 				if (Utils.isBlank(line)) {
 					break;
 				}
 				Matcher m = multiMarkdownTag.matcher(line);
 				if (!m.find()) {
-					if (lineNum == 0)
+					if (lineNum == 0) {
+						// No MultiMarkdown metadata
+						validMetadata = false;
 						break;
-					// Multi-line tag
-					lineTypes.add(KLineType.META);
-					data += StrUtils.LINEEND + line.trim();
-					multiMarkdownTags.put(tag, data);
-				} else {
-					lineTypes.add(KLineType.META);
-					tag = m.group(0);
-					data = m.group(1).trim();
-					if (m.group(1).endsWith(line))
-						multiMarkdownTags.put(tag, data);
+					} else if (!line.matches("^\\s.*\n")) {
+						// The next line was not intended (ie. it does not start
+						// with a whitespace)
+						validMetadata = false;
+						break;
+					}
 				}
+			}
+			
+			// Valid Metadatas have been found. We need to retrieve these keys/values.
+			if (validMetadata) {
+				String data = "";
+				String tag = "";
+				for (lineNum = 0; lineNum < lines.size(); lineNum++) {
+					String line = lines.get(lineNum);
+					if (Utils.isBlank(line)) {
+						break;
+					}
+					Matcher m = multiMarkdownTag.matcher(line);
+					if (!m.find()) {
+						if (lineNum == 0) {
+							break;
+						}
+						// Multi-line tag
+						lineTypes.add(KLineType.META);
+						data += StrUtils.LINEEND + line.trim();
+						multiMarkdownTags.put(tag, data);
+					} else {
+						lineTypes.add(KLineType.META);
+						tag = m.group(0);
+						data = m.group(1).trim();
+						if (m.group(1).endsWith(line))
+							multiMarkdownTags.put(tag, data);
+					}
+				}
+			} else {
+				lineNum = 0;
 			}
 		}
 		for (; lineNum < lines.size(); lineNum++) {
