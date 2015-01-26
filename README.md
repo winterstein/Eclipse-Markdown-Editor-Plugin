@@ -58,7 +58,18 @@ Use Help -> Install New Software... -> Add... -> Archive to istall from .zip fil
 
 Increase version
 
-	mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=1.1.0-SNAPSHOT
+	mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=1.2.0-SNAPSHOT
 
+### History
+
+- 1.0
+- 1.1 (24 Feb 2014) by Telmo Brugnara @tbrugz #40
+  - Rich color preferences #35 #37
+- 1.2 (Jan 2015) by Olivier Martin @oliviermartin #52
+  - Update preview when the file is saved #48
+  - MultiMarkdown metadata #49
+  - GitHub code blocks #50
+  - detecting links #51
+  - open GFM View from Markdown View #53
 
 <a href="http://with-eclipse.github.io/" target="_blank"><img alt="with-Eclipse logo" src="http://with-eclipse.github.io/with-eclipse-1.jpg" /></a>
