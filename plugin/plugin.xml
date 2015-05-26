@@ -6,11 +6,12 @@
          point="org.eclipse.ui.editors">
       <editor
             name="Markdown Editor"
-            extensions="txt,md,mdown,markdown"
+            extensions="txt,md,mdown,markdown,mdwn"
             icon="icons/notepad.gif"
             contributorClass="winterwell.markdown.editors.ActionBarContributor"
             class="winterwell.markdown.editors.MarkdownEditor"
-            id="winterwell.markdown.editors.MarkdownEditor">
+            id="winterwell.markdown.editors.MarkdownEditor"
+            default="true">
       </editor>
    </extension>
    
