@@ -13,6 +13,17 @@
             id="winterwell.markdown.editors.MarkdownEditor"
             default="true">
       </editor>
+      
+      <editor
+            class="winterwell.markdown.editors.MarkdownEditor"
+            contributorClass="winterwell.markdown.editors.ActionBarContributor"
+            default="true"
+            extensions="litcoffee"
+            icon="icons/coffee.png"
+            id="org.nodeclipse.ui.editors.LitCoffeeEditor"
+            name="LitCoffee (Markdown) Editor">
+      </editor>
+      
    </extension>
    
    <extension
