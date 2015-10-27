@@ -6,8 +6,8 @@ title="Drag and drop into a running Eclipse toolbar area to install Markdown Tex
   <img src="https://marketplace.eclipse.org/sites/all/modules/custom/marketplace/images/installbutton.png"/>
 </a>
 
-Edit .md and .txt files with outlines & syntax highlighting.  
-Preview HTML.
+Edit .md and .txt files with syntax highlighting.   
+Provides Outline and Preview HTML views.
 
 Please see the website for information:
 <http://www.winterwell.com/software/markdown-editor.php>
@@ -16,7 +16,7 @@ Eclipse Marketplace entry:
 <http://marketplace.eclipse.org/content/markdown-text-editor>  
 or install with [Nodeclipse CLI Installer](https://github.com/Nodeclipse/nodeclipse-1/tree/master/org.nodeclipse.ui/templates) `nodeclipse install markdown`
 
-There is also complementary Github Flavoured Markdown Viewer
+There is also a complementary GitHub Flavoured Markdown Viewer
 <https://github.com/satyagraha/gfm_viewer>
 
 
@@ -24,7 +24,7 @@ There is also complementary Github Flavoured Markdown Viewer
 
 ![](http://marketplace.eclipse.org/sites/default/files/Markdown-Editor-1.1.0.PNG)
 
-Note that for HTML preview OS internal browser is used, e.g. Internet Explorer on Windows; if you use Ubuntu or other Linux distros, we recommend the WebKit browser; see:
+Note that for HTML preview OS the internal browser is used, e.g. Internet Explorer on Windows; if you use Ubuntu or other Linux distros, we recommend the WebKit browser; see:
 
 - <http://www.eclipse.org/swt/faq.php#browserlinuxrcp>
 - <http://www.eclipse.org/swt/faq.php#browserlinux>
