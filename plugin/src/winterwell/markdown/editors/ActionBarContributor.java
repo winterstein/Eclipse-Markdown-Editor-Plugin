@@ -22,10 +22,6 @@ public class ActionBarContributor extends TextEditorActionContributor {
 //	    	todo bars.setGlobalActionHandler(ActionFactory.PRINT.getId(), print);
 //	    	bars.updateActionBars();
 	    }
-	    // Update preview?
-		if (MarkdownPreview.preview != null) {
-			MarkdownPreview.preview.update();
-		}
 	}
 	public static IEditorPart getActiveEditor() {
 		return activeEditor;
