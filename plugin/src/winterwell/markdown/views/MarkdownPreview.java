@@ -33,6 +33,9 @@ public class MarkdownPreview extends ViewPart {
 		@Override
 		public synchronized void run() {
 			try {
+				if (viewer == null || viewer.isDisposed()) {
+					return;
+				}
 				if (System.currentTimeMillis() - lastExecution < WAIT_TIME) {
 					return;
 				} else {
@@ -59,13 +62,10 @@ public class MarkdownPreview extends ViewPart {
 	
 	public static MarkdownPreview preview = null;
 	
-	private static File previewFile = null;
+	private File previewFile = null;
 	
-	private static Browser viewer = null;
+	private Browser viewer = null;
 
-	/**
-	 * The constructor.
-	 */
 	public MarkdownPreview() {
 		preview = this;
 		previewFile = Activator.getDefault().getStateLocation().append("markdown.html").toFile();
@@ -80,21 +80,22 @@ public class MarkdownPreview extends ViewPart {
 		viewer = new Browser(parent, SWT.MULTI); // | SWT.H_SCROLL | SWT.V_SCROLL
 	}
 
-
-
-
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
 	@Override
 	public void setFocus() {
-		if (viewer==null) return;
+		if (viewer == null || viewer.isDisposed()) {
+			return;
+		}
 		viewer.setFocus();
 		update();
 	}
 
 	public void update() {
-		if (viewer==null) return;
+		if (viewer == null || viewer.isDisposed()) {
+			return;
+		}
 		try {
 			IEditorPart editor = ActionBarContributor.getActiveEditor();
 			if (!(editor instanceof MarkdownEditor)) {
@@ -115,8 +116,9 @@ public class MarkdownPreview extends ViewPart {
 			// Smother
 			System.out.println(ex);
 			
-			if (viewer != null && !viewer.isDisposed())
+			if (viewer != null && !viewer.isDisposed()) {
 				viewer.setText(ex.getMessage());
+			}
 		}
 	}
 
