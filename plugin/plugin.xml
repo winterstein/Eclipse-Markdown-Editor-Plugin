@@ -42,6 +42,21 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="winterwell.markdown.MarkdownEditor">
+            <command
+                  commandId="winterwell.markdown.commands.OpenMdView"
+                  icon="icons/notepad.gif"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+         </toolbar>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -49,6 +64,10 @@
             defaultHandler="winterwell.markdown.commands.OpenGfmView"
             id="winterwell.markdown.commands.OpenGfmView"
             name="Open GitHub Flavored Markdown View">
+      </command>
+      <command
+            id="winterwell.markdown.commands.OpenMdView"
+            name="Open Markdown View">
       </command>
       <command
             defaultHandler="winterwell.markdown.commands.Preferences"
@@ -120,6 +139,21 @@
                style="push">
          </action>
       </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="winterwell.markdown.commands.OpenMdView"
+            commandId="winterwell.markdown.commands.OpenMdView">
+         <activeWhen>
+            <with
+                  variable="activeEditorId">
+               <equals
+                     value="winterwell.markdown.editors.MarkdownEditor">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
    </extension>
 
 </plugin>
