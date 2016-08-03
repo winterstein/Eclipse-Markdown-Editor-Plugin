@@ -325,34 +325,46 @@ public class MarkdownPage {
 				lineNum = 0;
 			}
 		}
+		
+		boolean githubSyntaxSupport =
+				pStore.getBoolean(MarkdownPreferencePage.PREF_GITHUB_SYNTAX);
+		
+		boolean inCodeBlock = false;
+		
 		for (; lineNum < lines.size(); lineNum++) {
 			String line = lines.get(lineNum);
-			// Headings
-			int h = numHash(line);
-			String hLine = line;
-			int hLineNum = lineNum;
-			int underline = -1;
-			if (lineNum != 0) {
-				underline = just(line, '=') ? 1 : just(line, '-') ? 2 : -1;
+			// Code blocks
+			if (githubSyntaxSupport && line.startsWith("```")) {
+				inCodeBlock = !inCodeBlock;
 			}
-			if (underline != -1) {
-				h = underline;
-				hLineNum = lineNum - 1;
-				hLine = lines.get(lineNum - 1);
-				lineTypes.set(hLineNum, KLineType.values()[h]);
-				lineTypes.add(KLineType.MARKER);
-			}
-			// Create a Header object
-			if (h > 0) {
-				if (underline == -1)
-					lineTypes.add(KLineType.values()[h]);
-				Header header = new Header(h, hLineNum, hLine, currentHeader);
-				if (h == 1) {
-					level1Headers.add(header);
+			if (!inCodeBlock) {
+				// Headings
+				int h = numHash(line);
+				String hLine = line;
+				int hLineNum = lineNum;
+				int underline = -1;
+				if (lineNum != 0) {
+					underline = just(line, '=') ? 1 : just(line, '-') ? 2 : -1;
 				}
-				pageObjects.put(hLineNum, header);
-				currentHeader = header;
-				continue;
+				if (underline != -1) {
+					h = underline;
+					hLineNum = lineNum - 1;
+					hLine = lines.get(lineNum - 1);
+					lineTypes.set(hLineNum, KLineType.values()[h]);
+					lineTypes.add(KLineType.MARKER);
+				}
+				// Create a Header object
+				if (h > 0) {
+					if (underline == -1)
+						lineTypes.add(KLineType.values()[h]);
+					Header header = new Header(h, hLineNum, hLine, currentHeader);
+					if (h == 1) {
+						level1Headers.add(header);
+					}
+					pageObjects.put(hLineNum, header);
+					currentHeader = header;
+					continue;
+				}
 			}
 			// TODO List
 			// TODO Block quote
@@ -368,14 +380,11 @@ public class MarkdownPage {
 		if (dummyTopHeader.getSubHeaders().size() == 0) {
 			level1Headers.remove(dummyTopHeader);
 		}
-		
-		boolean githubSyntaxSupport =
-				pStore.getBoolean(MarkdownPreferencePage.PREF_GITHUB_SYNTAX);
 		if (githubSyntaxSupport) {
 			/*
 			 * Support Code block
 			 */
-			boolean inCodeBlock = false;
+			inCodeBlock = false;
 			for (lineNum = 0; lineNum < lines.size(); lineNum++) {
 				String line = lines.get(lineNum);
 				// Found the start or end of a code block
