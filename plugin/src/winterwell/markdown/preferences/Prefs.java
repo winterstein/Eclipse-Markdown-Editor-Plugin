@@ -1,0 +1,31 @@
+package winterwell.markdown.preferences;
+
+public interface Prefs {
+
+	// Preference store keys
+	public static final String PREF_FOLDING = "Pref_Folding";
+	public static final String PREF_WORD_WRAP = "Pref_WordWrap";
+	public static final String PREF_TASK_TAGS = "Pref_TaskTagsOn";
+	public static final String PREF_TASK_TAGS_DEFINED = "Pref_TaskTags";
+	public static final String PREF_SECTION_NUMBERS = "Pref_SectionNumbers";
+
+	public static final String PREF_MARKDOWN_COMMAND = "Pref_Markdown_Command";
+
+	public static final String PREF_DEFAULT = "Pref_Default";
+	public static final String PREF_COMMENT = "Pref_Comment";
+	public static final String PREF_HEADER = "Pref_Header";
+	public static final String PREF_LINK = "Pref_Link";
+	public static final String PREF_CODE = "Pref_Code";
+	public static final String PREF_CODE_BG = "Pref_Code_Background";
+
+	public static final String PREF_GITHUB_SYNTAX = "Pref_Github_Syntax";
+	public static final String PREF_MULTIMARKDOWN_METADATA = "Pref_MultiMarkdown_Metadata";
+
+	public static final String PREF_CSS_DEFAULT = "Pref_Markdown_Css";
+	public static final String PREF_CSS_CUSTOM = "";
+
+	// Public preference related values
+	public static final String DEF_MDCSS = "markdown.css";
+	public static final String CSS = "css";
+
+}
