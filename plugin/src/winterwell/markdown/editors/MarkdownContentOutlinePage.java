@@ -46,19 +46,14 @@ import winterwell.utils.Utils;
 import winterwell.utils.web.WebUtils;
 
 /**
- *
- *
  * @author Daniel Winterstein
  */
 public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 
 	/**
-	 *
-	 *
 	 * @author Daniel Winterstein
 	 */
-	public final class ContentProvider implements ITreeContentProvider,
-			IDocumentListener {
+	public final class ContentProvider implements ITreeContentProvider, IDocumentListener {
 
 		// protected final static String SEGMENTS= "__md_segments";
 		// //$NON-NLS-1$
@@ -85,11 +80,9 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 			}
 			fContent = null;
 			// Attach to new
-			if (newInput == null)
-				return;
+			if (newInput == null) return;
 			IDocument document = fDocumentProvider.getDocument(newInput);
-			if (document == null)
-				return;
+			if (document == null) return;
 			fTextEditor = MarkdownEditor.getEditor(document);
 			document.addDocumentListener(this);
 			parse();
@@ -126,8 +119,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 			if (element instanceof MarkdownPage.Header) {
 				MarkdownPage.Header header = (MarkdownPage.Header) element;
 				return header.getSubHeaders().size() > 0;
-			}
-			;
+			} ;
 			return false;
 		}
 
@@ -135,8 +127,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		 * @see ITreeContentProvider#getParent(Object)
 		 */
 		public Object getParent(Object element) {
-			if (!(element instanceof MarkdownPage.Header))
-				return null;
+			if (!(element instanceof MarkdownPage.Header)) return null;
 			return ((MarkdownPage.Header) element).getParent();
 		}
 
@@ -147,8 +138,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 			if (element == fInput) {
 				return fContent.getHeadings(null).toArray();
 			}
-			if (!(element instanceof MarkdownPage.Header))
-				return null;
+			if (!(element instanceof MarkdownPage.Header)) return null;
 			return ((MarkdownPage.Header) element).getSubHeaders().toArray();
 		}
 
@@ -172,8 +162,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 	 * @param documentProvider
 	 * @param mdEditor
 	 */
-	public MarkdownContentOutlinePage(IDocumentProvider documentProvider,
-			MarkdownEditor mdEditor) {
+	public MarkdownContentOutlinePage(IDocumentProvider documentProvider, MarkdownEditor mdEditor) {
 		fDocumentProvider = documentProvider;
 		fTextEditor = mdEditor;
 	}
@@ -188,19 +177,17 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		viewer.setContentProvider(new ContentProvider());
 		// Add word count annotations
 		viewer.setLabelProvider(new LabelProvider() {
+
 			@Override
 			public String getText(Object element) {
-				if (!(element instanceof MarkdownPage.Header))
-					return super.getText(element);
+				if (!(element instanceof MarkdownPage.Header)) return super.getText(element);
 				Header header = ((MarkdownPage.Header) element);
 				String hText = header.toString();
-				if (!showWordCounts)
-					return hText;
+				if (!showWordCounts) return hText;
 				IRegion region = getRegion(header);
 				String text;
 				try {
-					text = fTextEditor.getDocument().get(region.getOffset(),
-							region.getLength());
+					text = fTextEditor.getDocument().get(region.getOffset(), region.getLength());
 					text = WebUtils.stripTags(text);
 					text = text.replaceAll("#", "").trim();
 					assert text.startsWith(hText);
@@ -214,8 +201,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		});
 		viewer.addSelectionChangedListener(this);
 
-		if (fInput != null)
-			viewer.setInput(fInput);
+		if (fInput != null) viewer.setInput(fInput);
 
 		// Buttons
 		IPageSite site = getSite();
@@ -223,6 +209,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		IToolBarManager toolbar = bars.getToolBarManager();
 		// Word count action
 		Action action = new Action("123", IAction.AS_CHECK_BOX) {
+
 			@Override
 			public void run() {
 				showWordCounts = isChecked();
@@ -233,6 +220,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		toolbar.add(action);
 		// +/- actions
 		action = new Action("<") {
+
 			@Override
 			public void run() {
 				doPromoteDemote(-1);
@@ -242,6 +230,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		toolbar.add(action);
 		//
 		action = new Action(">") {
+
 			@Override
 			public void run() {
 				doPromoteDemote(1);
@@ -251,6 +240,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		toolbar.add(action);
 		// up/down actions
 		action = new Action("/\\") {
+
 			@Override
 			public void run() {
 				try {
@@ -264,6 +254,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		toolbar.add(action);
 		//
 		action = new Action("\\/") {
+
 			@Override
 			public void run() {
 				try {
@@ -278,6 +269,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		// Collapse
 		ImageDescriptor id = ImageDescriptor.createFromFile(getClass(), "collapseall.gif");
 		action = new Action("collapse", id) {
+
 			@Override
 			public void run() {
 				doCollapseAll();
@@ -289,6 +281,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		// Sync
 		id = ImageDescriptor.createFromFile(getClass(), "synced.gif");
 		action = new Action("sync") {
+
 			@Override
 			public void run() {
 				try {
@@ -303,11 +296,13 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		toolbar.add(action);
 		// Add edit ability
 		viewer.getControl().addKeyListener(new KeyListener() {
+
 			public void keyPressed(KeyEvent e) {
-				if (e.keyCode==SWT.F2) {
+				if (e.keyCode == SWT.F2) {
 					doEditHeader();
 				}
 			}
+
 			public void keyReleased(KeyEvent e) {
 				//
 			}
@@ -316,7 +311,6 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 
 	/**
 	 * @throws BadLocationException
-	 *
 	 */
 	protected void doSyncToEditor() throws BadLocationException {
 		TreeViewer viewer = getTreeViewer();
@@ -327,15 +321,15 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		IDocument doc = fTextEditor.getDocument();
 		int line = doc.getLineOfOffset(caretOffset);
 		List<KLineType> lineTypes = page.getLineTypes();
-		for(; line>-1; line--) {
+		for (; line > -1; line--) {
 			KLineType lt = lineTypes.get(line);
 			if (lt.toString().startsWith("H")) break;
 		}
-		if (line<0) return;
+		if (line < 0) return;
 		Header header = (Header) page.getPageObject(line);
 		// Set
 		IStructuredSelection selection = new StructuredSelection(header);
-		viewer.setSelection(selection , true);
+		viewer.setSelection(selection, true);
 	}
 
 	void doEditHeader() {
@@ -346,41 +340,40 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 	protected void doCollapseAll() {
 		TreeViewer viewer = getTreeViewer();
 		if (viewer == null) return;
-//		Control control = viewer.getControl();
-//		if (control != null && !control.isDisposed()) {
-//			control.setRedraw(false);
+		// Control control = viewer.getControl();
+		// if (control != null && !control.isDisposed()) {
+		// control.setRedraw(false);
 		viewer.collapseAll();
-//			control.setRedraw(true);
-//		}
+		// control.setRedraw(true);
+		// }
 	}
 
 	/**
 	 * Move the selected sections up/down
+	 * 
 	 * @param i 1 or -1. 1==move later, -1=earlier
 	 * @throws BadLocationException
 	 */
 	protected void doMove(int i) throws BadLocationException {
-		assert i==1 || i==-1;
-		if (selectedHeaders == null || selectedHeaders.size() == 0)
-			return;
+		assert i == 1 || i == -1;
+		if (selectedHeaders == null || selectedHeaders.size() == 0) return;
 		// Get text region to move
 		MarkdownPage.Header first = selectedHeaders.get(0);
-		MarkdownPage.Header last = selectedHeaders.get(selectedHeaders.size()-1);
-		int start = fTextEditor.getDocument().getLineOffset(
-				first.getLineNumber());
+		MarkdownPage.Header last = selectedHeaders.get(selectedHeaders.size() - 1);
+		int start = fTextEditor.getDocument().getLineOffset(first.getLineNumber());
 		IRegion r = getRegion(last);
 		int end = r.getOffset() + r.getLength();
-		int length = end - start;
+		// int length = end - start;
 		// Get new insertion point
 		int insert;
-		if (i==1) {
+		if (i == 1) {
 			Header nextSection = last.getNext();
-			if (nextSection==null) return;
+			if (nextSection == null) return;
 			IRegion nr = getRegion(nextSection);
-			insert = nr.getOffset()+nr.getLength();
+			insert = nr.getOffset() + nr.getLength();
 		} else {
 			Header prevSection = first.getPrevious();
-			if (prevSection==null) return;
+			if (prevSection == null) return;
 			IRegion nr = getRegion(prevSection);
 			insert = nr.getOffset();
 		}
@@ -389,51 +382,53 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 		// Move text
 		String section = text.substring(start, end);
 		String pre, post;
-		if (i==1) {
+		if (i == 1) {
 			pre = text.substring(0, start) + text.substring(end, insert);
 			post = text.substring(insert);
 		} else {
 			pre = text.substring(0, insert);
-			post = text.substring(insert,start)+text.substring(end);
+			post = text.substring(insert, start) + text.substring(end);
 		}
-		text =  pre + section + post;
-		assert text.length() == fTextEditor.getDocument().get().length() :
-			text.length()-fTextEditor.getDocument().get().length()+" chars gained/lost";
+		text = pre + section + post;
+		assert text.length() == fTextEditor.getDocument().get().length() : text.length()
+				- fTextEditor.getDocument().get().length() + " chars gained/lost";
 		// Update doc
 		fTextEditor.getDocument().set(text);
 	}
 
 	/**
 	 * Does not support -------- / ========= underlining, only # headers
+	 * 
 	 * @param upDown 1 for demote (e.g. h2 -> h3), -1 for promote (e.g. h2 -> h1)
 	 */
 	protected void doPromoteDemote(int upDown) {
-		assert upDown==1 || upDown==-1;
-		if (selectedHeaders == null || selectedHeaders.size() == 0)
-			return;
+		assert upDown == 1 || upDown == -1;
+		if (selectedHeaders == null || selectedHeaders.size() == 0) return;
 		HashSet<Header> toAdjust = new HashSet<Header>(selectedHeaders);
 		HashSet<Header> adjusted = new HashSet<Header>();
 		// Adjust
 		MarkdownPage mdPage = fTextEditor.getMarkdownPage();
 		List<String> lines = new ArrayList<String>(mdPage.getText());
-		while(toAdjust.size() != 0) {
+		while (toAdjust.size() != 0) {
 			Header h = toAdjust.iterator().next();
 			toAdjust.remove(h);
 			adjusted.add(h);
 			String line = lines.get(h.getLineNumber());
-			if (upDown==-1) {
+			if (upDown == -1) {
 				if (h.getLevel() == 1) return; // Level 1; can't promote
-				if (line.startsWith("##")) line = line.substring(1);
+				if (line.startsWith("##"))
+					line = line.substring(1);
 				else {
 					return; // TODO support for ------ / ========
 				}
-			} else line = "#" + line;
+			} else
+				line = "#" + line;
 			int ln = h.getLineNumber();
 			lines.set(ln, line);
 			// kids
 			ArrayList<Header> kids = new ArrayList<Header>(h.getSubHeaders());
 			for (Header header : kids) {
-				if ( ! adjusted.contains(header)) toAdjust.add(header);
+				if (!adjusted.contains(header)) toAdjust.add(header);
 			}
 		}
 		// Set
@@ -446,6 +441,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 
 	/**
 	 * The region of text for this header. This includes the header itself.
+	 * 
 	 * @param header
 	 * @return
 	 * @throws BadLocationException
@@ -474,27 +470,24 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 	/*
 	 * (non-Javadoc) Method declared on ContentOutlinePage
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		super.selectionChanged(event);
 		selectedHeaders = null;
 		ISelection selection = event.getSelection();
-		if (selection.isEmpty())
-			return;
-		if (!(selection instanceof IStructuredSelection))
-			return;
+		if (selection.isEmpty()) return;
+		if (!(selection instanceof IStructuredSelection)) return;
 		try {
 			IStructuredSelection strucSel = (IStructuredSelection) selection;
 			Object[] sections = strucSel.toArray();
 			selectedHeaders = (List) Arrays.asList(sections);
 			MarkdownPage.Header first = (Header) sections[0];
 			MarkdownPage.Header last = (Header) sections[sections.length - 1];
-			int start = fTextEditor.getDocument().getLineOffset(
-					first.getLineNumber());
+			int start = fTextEditor.getDocument().getLineOffset(first.getLineNumber());
 			int length;
 			if (first == last) {
-				length = fTextEditor.getDocument().getLineLength(
-						first.getLineNumber());
+				length = fTextEditor.getDocument().getLineLength(first.getLineNumber());
 			} else {
 				IRegion r = getRegion(last);
 				int end = r.getOffset() + r.getLength();
@@ -510,8 +503,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 	/**
 	 * Sets the input of the outline page
 	 *
-	 * @param input
-	 *            the input of this outline page
+	 * @param input the input of this outline page
 	 */
 	public void setInput(Object input) {
 		fInput = input;
