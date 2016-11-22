@@ -2,7 +2,6 @@ package winterwell.markdown.views;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -194,10 +193,10 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 		String defaultCss = store.getString(PREF_CSS_DEFAULT);
 		if (!defaultCss.isEmpty()) {
 			try {
-				URI uri = new URL(defaultCss).toURI();
+				URI uri = new URI(defaultCss);
 				File file = new File(uri);
 				if (file.isFile()) return file.getPath();
-			} catch (MalformedURLException | URISyntaxException e1) {}
+			} catch (URISyntaxException e) {}
 		}
 
 		// 5) read 'markdown.css' from the bundle
