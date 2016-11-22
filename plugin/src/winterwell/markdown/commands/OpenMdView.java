@@ -10,7 +10,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import winterwell.markdown.LogUtil;
+import winterwell.markdown.Log;
 
 public class OpenMdView extends AbstractHandler {
 
@@ -33,7 +33,7 @@ public class OpenMdView extends AbstractHandler {
 		String title = "Exception while opening Markdown View";
 		String message = title+" (winterwell.markdown.views.MarkdownPreview)"
 				+"\nCheck Error Log View";
-		LogUtil.error(message, e);
+		Log.error(message, e);
 		MessageDialog.openError(Display.getDefault().getActiveShell(), title , message);
 	}
 }

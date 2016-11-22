@@ -40,6 +40,7 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import winterwell.markdown.Activator;
+import winterwell.markdown.Log;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.pagemodel.MarkdownPage.Header;
 import winterwell.markdown.preferences.MarkdownPreferencePage;
@@ -410,7 +411,7 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 					updateSectionFoldingAnnotations2(doc, subHeaders, newAnnotations, end);
 				}
 			} catch (Exception ex) {
-				System.out.println(ex);
+				Log.error(ex);
 			}
 		}
 	}

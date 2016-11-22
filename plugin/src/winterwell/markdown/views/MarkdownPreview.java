@@ -2,9 +2,13 @@ package winterwell.markdown.views;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
@@ -12,8 +16,13 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -28,6 +37,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 
 import winterwell.markdown.Activator;
+import winterwell.markdown.Log;
 import winterwell.markdown.editors.ActionBarContributor;
 import winterwell.markdown.editors.MarkdownEditor;
 import winterwell.markdown.pagemodel.MarkdownPage;
@@ -85,19 +95,6 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 		viewer = new Browser(parent, SWT.MULTI);
 	}
 
-	// Notes for future enhancement:
-	//
-	// StyledText text = ed.getViewer().getTextWidget();
-	// float offset = text.getCaretOffset();
-	// float size = text.getCharCount();
-	// float center = offset/size;
-	//
-	// var scrollTop = window.scrollTop();
-	// var docHeight = document.height();
-	// var winHeight = window.height();
-	// var scrollPercent = (scrollTop) / (docHeight - winHeight);
-	// var scrollPercentRounded = Math.round(scrollPercent * 100) / 100;
-
 	public void update() {
 		if (viewer == null) return;
 
@@ -131,12 +128,18 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 
 			viewer.setText(html);
 
-		} catch (Exception ex) {
-			System.out.println(ex);
+		} catch (Exception e) {
+			StringWriter errors = new StringWriter();
+			e.printStackTrace(new PrintWriter(errors));
+			Log.error(e.getLocalizedMessage() + EOL + errors.toString());
 
-			if (viewer != null && !viewer.isDisposed()) {
-				viewer.setText(ex.getMessage());
+			List<Status> lines = new ArrayList<>();
+			for (StackTraceElement line : e.getStackTrace()) {
+				lines.add(new Status(IStatus.ERROR, Activator.PLUGIN_ID, line.toString()));
 			}
+			MultiStatus status = new MultiStatus(Activator.PLUGIN_ID, IStatus.ERROR,
+					lines.toArray(new Status[lines.size()]), e.getLocalizedMessage(), e);
+			ErrorDialog.openError(null, "Viewer error", e.getMessage(), status);
 		}
 	}
 
@@ -193,10 +196,20 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 		String defaultCss = store.getString(PREF_CSS_DEFAULT);
 		if (!defaultCss.isEmpty()) {
 			try {
+				if (!defaultCss.startsWith("file:")) {
+					// apparently not absolute - at preference default
+					URL url = FileLocator.find(bundle, new Path("resources/" + defaultCss), null);
+					try {
+						url = FileLocator.toFileURL(url);
+						defaultCss = url.toURI().toString();
+					} catch (IOException | URISyntaxException e) {}
+				}
 				URI uri = new URI(defaultCss);
 				File file = new File(uri);
 				if (file.isFile()) return file.getPath();
-			} catch (URISyntaxException e) {}
+			} catch (URISyntaxException e) {
+				MessageDialog.openInformation(null, "Default CSS from bundle", defaultCss);
+			}
 		}
 
 		// 5) read 'markdown.css' from the bundle
@@ -205,7 +218,7 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 			url = FileLocator.toFileURL(url);
 			return url.toURI().toString();
 		} catch (IOException | URISyntaxException e) {
-			System.out.println(e);
+			Log.error(e);
 			return null;
 		}
 	}
@@ -234,4 +247,17 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 		sb.append("</head><body>" + EOL + html + EOL + "</body></html>");
 		return sb.toString();
 	}
+
+	// Notes for future enhancement:
+	//
+	// StyledText text = ed.getViewer().getTextWidget();
+	// float offset = text.getCaretOffset();
+	// float size = text.getCharCount();
+	// float center = offset/size;
+	//
+	// var scrollTop = window.scrollTop();
+	// var docHeight = document.height();
+	// var winHeight = window.height();
+	// var scrollPercent = (scrollTop) / (docHeight - winHeight);
+	// var scrollPercentRounded = Math.round(scrollPercent * 100) / 100;
 }

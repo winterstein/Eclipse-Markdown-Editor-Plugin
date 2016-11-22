@@ -10,7 +10,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import winterwell.markdown.LogUtil;
+import winterwell.markdown.Log;
 
 public class OpenGfmView extends AbstractHandler {
 
@@ -35,7 +35,7 @@ public class OpenGfmView extends AbstractHandler {
 				+"\nCheck Error Log View and continue at https://github.com/winterstein/Eclipse-Markdown-Editor-Plugin/issues/42"
 				+"\n\nYou can also right-click file in Project Explorer"
 				+"\n and select \"Show in GFM view\".";
-		LogUtil.error(message, e);
+		Log.error(message, e);
 		MessageDialog.openError(Display.getDefault().getActiveShell(), title , message);
 	}
 }

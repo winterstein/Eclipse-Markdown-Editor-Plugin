@@ -14,6 +14,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.ISourceViewer;
 
+import winterwell.markdown.Log;
 import winterwell.markdown.pagemodel.MarkdownFormatter;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.pagemodel.MarkdownPage.KLineType;
@@ -65,7 +66,7 @@ public class FormatAction extends Action implements IHandler {
 			ed.getDocument().replace(pRegion.getOffset(), pRegion.getLength(), formatted);
 			// Done
 		} catch (Exception ex) {
-			System.out.println(ex);
+			Log.error(ex);
 		}
 	}
 

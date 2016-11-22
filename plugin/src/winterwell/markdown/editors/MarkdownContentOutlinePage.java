@@ -38,6 +38,7 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
+import winterwell.markdown.Log;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.pagemodel.MarkdownPage.Header;
 import winterwell.markdown.pagemodel.MarkdownPage.KLineType;
@@ -494,8 +495,8 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 				length = end - start;
 			}
 			fTextEditor.setHighlightRange(start, length, true);
-		} catch (Exception x) {
-			System.out.println(x.getStackTrace());
+		} catch (Exception e) {
+			Log.error(e);
 			fTextEditor.resetHighlightRange();
 		}
 	}
