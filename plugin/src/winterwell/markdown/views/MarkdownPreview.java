@@ -70,10 +70,7 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 			switch (event.getProperty()) {
 				case PREF_CSS_CUSTOM:
 				case PREF_CSS_DEFAULT:
-					String value = (String) event.getNewValue();
-					if (value != null && !value.isEmpty()) {
-						update();
-					}
+					update();
 			}
 		}
 	}
@@ -88,7 +85,7 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 	}
 
 	/**
-	 * This is a callback that will allow us to create the viewer and initialize it.
+	 * Callback to create and initialize the viewer.
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -192,18 +189,9 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 		}
 
 		// 4) read the file identified by the pref key 'PREF_CSS_DEFAULT' from the bundle
-		Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
 		String defaultCss = store.getString(PREF_CSS_DEFAULT);
 		if (!defaultCss.isEmpty()) {
 			try {
-				if (!defaultCss.startsWith("file:")) {
-					// apparently not absolute - at preference default
-					URL url = FileLocator.find(bundle, new Path("resources/" + defaultCss), null);
-					try {
-						url = FileLocator.toFileURL(url);
-						defaultCss = url.toURI().toString();
-					} catch (IOException | URISyntaxException e) {}
-				}
 				URI uri = new URI(defaultCss);
 				File file = new File(uri);
 				if (file.isFile()) return file.getPath();
@@ -213,6 +201,7 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 		}
 
 		// 5) read 'markdown.css' from the bundle
+		Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
 		URL url = FileLocator.find(bundle, new Path("resources/" + DEF_MDCSS), null);
 		try {
 			url = FileLocator.toFileURL(url);

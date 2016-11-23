@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
@@ -104,7 +105,7 @@ public class MarkdownPreferencePage extends FieldEditorPreferencePage implements
 		pStore.setDefault(PREF_MARKDOWN_COMMAND, MARKDOWNJ);
 		pStore.setDefault(PREF_SECTION_NUMBERS, true);
 
-		pStore.setDefault(PREF_CSS_DEFAULT, DEF_MDCSS);
+		pStore.setDefault(PREF_CSS_DEFAULT, cssDefault());
 		pStore.setDefault(PREF_CSS_CUSTOM, "");
 		pStore.setDefault(PREF_GITHUB_SYNTAX, true);
 		pStore.setDefault(PREF_MULTIMARKDOWN_METADATA, false);
@@ -162,4 +163,14 @@ public class MarkdownPreferencePage extends FieldEditorPreferencePage implements
 		return values;
 	}
 
+	// get bundle cache URL for the default stylesheet
+	private static String cssDefault() {
+		Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
+		URL url = FileLocator.find(bundle, new Path("resources/" + DEF_MDCSS), null);
+		try {
+			url = FileLocator.toFileURL(url);
+			return url.toURI().toString();
+		} catch (IOException | URISyntaxException e) {}
+		return DEF_MDCSS; // really an error
+	}
 }
