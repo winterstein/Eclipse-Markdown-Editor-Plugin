@@ -106,8 +106,7 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 		ISourceViewer viewer = new ProjectionViewer(parent, ruler, getOverviewRuler(), isOverviewRulerVisible(),
 				styles);
 		// ensure decoration support has been created and configured.
-		/* SourceViewerDecorationSupport decSupport = */ getSourceViewerDecorationSupport(viewer);
-		// SourceViewer viewer = (SourceViewer) super.createSourceViewer(parent, ruler, styles);
+		getSourceViewerDecorationSupport(viewer);
 		// Setup word-wrapping
 		final StyledText widget = viewer.getTextWidget();
 		// Listen to pref changes

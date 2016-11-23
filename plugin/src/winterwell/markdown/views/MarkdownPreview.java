@@ -38,7 +38,7 @@ import org.osgi.framework.Bundle;
 
 import winterwell.markdown.Activator;
 import winterwell.markdown.Log;
-import winterwell.markdown.editors.ActionBarContributor;
+import winterwell.markdown.commands.ActionBarContributor;
 import winterwell.markdown.editors.MarkdownEditor;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.preferences.Prefs;

@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.7"?>
 <plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="winterwell.markdown.preferences.MarkdownPreferencePage"
+            id="winterwell.markdown.preferences.MarkdownPreferencePage"
+            name="Markdown Editor">
+         <keywordReference
+               id="winterwell.markdown.prefsKeywordReference">
+         </keywordReference>
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="winterwell.markdown.preferences.PrefsInit">
+      </initializer>
+   </extension>
 
    <extension
          point="org.eclipse.ui.editors">
       <editor
             name="Markdown Editor"
             extensions="txt,md,mdown,markdown,mdwn"
-            icon="icons/notepad.gif"
-            contributorClass="winterwell.markdown.editors.ActionBarContributor"
+            icon="icons/markdown.png"
+            contributorClass="winterwell.markdown.commands.ActionBarContributor"
             class="winterwell.markdown.editors.MarkdownEditor"
             id="winterwell.markdown.editors.MarkdownEditor"
             default="true">
@@ -16,7 +33,7 @@
       
       <editor
             class="winterwell.markdown.editors.MarkdownEditor"
-            contributorClass="winterwell.markdown.editors.ActionBarContributor"
+            contributorClass="winterwell.markdown.commands.ActionBarContributor"
             default="true"
             extensions="litcoffee"
             icon="icons/coffee.png"
@@ -34,12 +51,14 @@
          <command
                commandId="winterwell.markdown.commands.OpenGfmView"
                icon="icons/github-cat_yellow.png"
-               style="push">
+               style="push"
+               tooltip="Use Github-flavored Markdown ">
          </command>
          <command
                commandId="winterwell.markdown.commands.Preferences"
                icon="icons/settings16_yellow.png"
-               style="push">
+               style="push"
+               tooltip="Open Preferences">
          </command>
       </menuContribution>
       <menuContribution
@@ -49,8 +68,9 @@
                id="winterwell.markdown.MarkdownEditor">
             <command
                   commandId="winterwell.markdown.commands.OpenMdView"
-                  icon="icons/notepad.gif"
-                  style="push">
+                  icon="icons/markdown.png"
+                  style="push"
+                  tooltip="Open Markdown Viewer">
                <visibleWhen
                      checkEnabled="true">
                </visibleWhen>
@@ -61,18 +81,24 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="winterwell.markdown.commands.OpenGfmView"
-            id="winterwell.markdown.commands.OpenGfmView"
-            name="Open GitHub Flavored Markdown View">
+            defaultHandler="winterwell.markdown.commands.OpenPreferences"
+            id="winterwell.markdown.commands.Preferences"
+            name="Preferences">
       </command>
       <command
             id="winterwell.markdown.commands.OpenMdView"
             name="Open Markdown View">
       </command>
       <command
-            defaultHandler="winterwell.markdown.commands.Preferences"
-            id="winterwell.markdown.commands.Preferences"
-            name="Preferences">
+            defaultHandler="winterwell.markdown.commands.OpenGfmView"
+            id="winterwell.markdown.commands.OpenGfmView"
+            name="Open GitHub Flavored Markdown View">
+      </command>
+      <command
+            defaultHandler="winterwell.markdown.commands.FormatParagraph"
+            description="Format current paragraph to fit margins"
+            id="winterwell.markdown.formatParagraphCommand"
+            name="Format paragraph">
       </command>
    </extension>
    
@@ -84,21 +110,9 @@
       <view
             category="winterwell.markdown"
             class="winterwell.markdown.views.MarkdownPreview"
-            icon="icons/notepad.gif"
+            icon="icons/markdown.png"
             id="winterwell.markdown.views.MarkdownPreview"
             name="Markdown View"/>
-   </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            class="winterwell.markdown.preferences.MarkdownPreferencePage"
-            id="winterwell.markdown.preferences.MarkdownPreferencePage"
-            name="Markdown"
-            category="org.eclipse.ui.preferencePages.GeneralTextEditor">
-         <keywordReference
-               id="winterwell.markdown.prefsKeywordReference">
-         </keywordReference>
-      </page>
    </extension>
    <extension
          point="org.eclipse.ui.keywords">
@@ -108,15 +122,6 @@
       </keyword>
    </extension>
    <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="winterwell.markdown.editors.FormatAction"
-            description="Format the paragraph under the caret to fit the print margins by inserting/removing line-breaks"
-            id="winterwell.markdown.formatParagraphCommand"
-            name="Format paragraph">
-      </command>
-   </extension>
-   <extension
          point="org.eclipse.ui.bindings">
       <key
             commandId="winterwell.markdown.formatParagraphCommand"
@@ -124,21 +129,6 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="Alt+Q">
       </key>
-   </extension>
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            id="winterwell.markdown.actionSet"
-            label="winterwell.markdown.actionSet">
-         <action
-               class="winterwell.markdown.editors.FormatAction"
-               definitionId="winterwell.markdown.formatParagraphCommand"
-               id="winterwell.markdown.formatParagraphAction"
-               label="Format paragraph"
-               menubarPath="edit"
-               style="push">
-         </action>
-      </actionSet>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">

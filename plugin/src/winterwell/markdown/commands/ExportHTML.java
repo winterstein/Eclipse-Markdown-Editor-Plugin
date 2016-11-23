@@ -1,4 +1,4 @@
-package winterwell.markdown.editors;
+package winterwell.markdown.commands;
 
 import java.io.File;
 
@@ -8,11 +8,12 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPathEditorInput;
 
+import winterwell.markdown.editors.MarkdownEditor;
 import winterwell.utils.io.FileUtils;
 
 
-public class ExportHTMLAction extends Action {
-	public ExportHTMLAction() {
+public class ExportHTML extends Action {
+	public ExportHTML() {
 		super("Export to HTML");
 	}
 	@Override

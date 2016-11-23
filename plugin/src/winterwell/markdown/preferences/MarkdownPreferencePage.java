@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
@@ -16,9 +15,7 @@ import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -28,22 +25,9 @@ import winterwell.markdown.Activator;
 
 public class MarkdownPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage, Prefs {
 
-	private static final String MARKDOWNJ = "(use built-in MarkdownJ converter)";
-
-	private static final RGB DEF_DEFAULT = new RGB(0, 0, 0);
-	private static final RGB DEF_COMMENT = new RGB(128, 0, 0);
-	private static final RGB DEF_HEADER = new RGB(0, 128, 0);
-	private static final RGB DEF_LINK = new RGB(106, 131, 199);
-	private static final RGB DEF_CODE = new RGB(0, 0, 0);
-	private static final RGB DEF_CODE_BG = new RGB(244, 244, 244);
-
-	private static final String[][] builtins = builtins();
-
 	public MarkdownPreferencePage() {
 		super(GRID);
-		IPreferenceStore pStore = Activator.getDefault().getPreferenceStore();
-		setDefaultPreferences(pStore);
-		setPreferenceStore(pStore);
+		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription("Settings for the Markdown text editor. See also the general text editor preferences.");
 	}
 
@@ -84,7 +68,7 @@ public class MarkdownPreferencePage extends FieldEditorPreferencePage implements
 		/* Fields for preview window */
 
 		// Browser CSS
-		addField(new ComboFieldEditor(PREF_CSS_DEFAULT, "Default Stylesheet", builtins, parent));
+		addField(new ComboFieldEditor(PREF_CSS_DEFAULT, "Default Stylesheet", builtins(), parent));
 		addField(new FileFieldEditor(PREF_CSS_CUSTOM, "Custom Stylesheet", parent));
 
 		// Github Syntax support
@@ -94,41 +78,9 @@ public class MarkdownPreferencePage extends FieldEditorPreferencePage implements
 		addField(new BooleanFieldEditor(PREF_MULTIMARKDOWN_METADATA, "Support Multi-Markdown Metadata", parent));
 	}
 
-	public void init(IWorkbench workbench) {}
-
-	public static void setDefaultPreferences(IPreferenceStore pStore) {
-		pStore.setDefault(PREF_WORD_WRAP, false);
-		pStore.setDefault(PREF_FOLDING, true);
-		pStore.setDefault(PREF_TASK_TAGS, true);
-		pStore.setDefault(PREF_TASK_TAGS_DEFINED, "TODO,FIXME,??");
-
-		pStore.setDefault(PREF_MARKDOWN_COMMAND, MARKDOWNJ);
-		pStore.setDefault(PREF_SECTION_NUMBERS, true);
-
-		pStore.setDefault(PREF_CSS_DEFAULT, cssDefault());
-		pStore.setDefault(PREF_CSS_CUSTOM, "");
-		pStore.setDefault(PREF_GITHUB_SYNTAX, true);
-		pStore.setDefault(PREF_MULTIMARKDOWN_METADATA, false);
-
-		PreferenceConverter.setDefault(pStore, PREF_DEFAULT, DEF_DEFAULT);
-		PreferenceConverter.setDefault(pStore, PREF_COMMENT, DEF_COMMENT);
-		PreferenceConverter.setDefault(pStore, PREF_HEADER, DEF_HEADER);
-		PreferenceConverter.setDefault(pStore, PREF_LINK, DEF_LINK);
-		PreferenceConverter.setDefault(pStore, PREF_CODE, DEF_CODE);
-		PreferenceConverter.setDefault(pStore, PREF_CODE_BG, DEF_CODE_BG);
-	}
-
-	public static boolean wordWrap() {
-		IPreferenceStore pStore = Activator.getDefault().getPreferenceStore();
-		if (!pStore.contains(MarkdownPreferencePage.PREF_WORD_WRAP)) {
-			return false;
-		}
-		return pStore.getBoolean(MarkdownPreferencePage.PREF_WORD_WRAP);
-	}
-
 	// build list of builtin stylesheets
 	// key=name, value=bundle cache URL as string
-	private static String[][] builtins() {
+	private String[][] builtins() {
 		Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
 		URL url = bundle.getEntry("resources/");
 		File dir = null;
@@ -163,14 +115,13 @@ public class MarkdownPreferencePage extends FieldEditorPreferencePage implements
 		return values;
 	}
 
-	// get bundle cache URL for the default stylesheet
-	private static String cssDefault() {
-		Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
-		URL url = FileLocator.find(bundle, new Path("resources/" + DEF_MDCSS), null);
-		try {
-			url = FileLocator.toFileURL(url);
-			return url.toURI().toString();
-		} catch (IOException | URISyntaxException e) {}
-		return DEF_MDCSS; // really an error
+	public void init(IWorkbench workbench) {}
+
+	public static boolean wordWrap() {
+		IPreferenceStore pStore = Activator.getDefault().getPreferenceStore();
+		if (!pStore.contains(PREF_WORD_WRAP)) {
+			return false;
+		}
+		return pStore.getBoolean(PREF_WORD_WRAP);
 	}
 }

@@ -1,4 +1,4 @@
-package winterwell.markdown.editors;
+package winterwell.markdown.commands;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.IActionBars;
@@ -38,12 +38,12 @@ public class ActionBarContributor extends TextEditorActionContributor {
 		// Add format action
 		IMenuManager edit = menu.findMenuUsingPath("edit");
 		if (edit != null) {
-			edit.add(new FormatAction());
+			edit.add(new FormatParagraph());
 		}
 		// Add Export action
 		IMenuManager file = menu.findMenuUsingPath("file");
 		if (file != null) {
-			file.appendToGroup("import.ext", new ExportHTMLAction());
+			file.appendToGroup("import.ext", new ExportHTML());
 		}
 	}
 
