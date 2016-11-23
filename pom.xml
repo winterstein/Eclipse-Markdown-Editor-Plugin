@@ -10,7 +10,7 @@
 	<version>1.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Markdown Editor</name>
+	<name>Markdown Editor parent</name>
 	<description>com.winterwell.markdown parent</description>
 
 	<organization>

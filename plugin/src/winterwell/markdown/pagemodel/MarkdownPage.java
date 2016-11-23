@@ -18,7 +18,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 import winterwell.markdown.Activator;
 import winterwell.markdown.StringMethods;
-import winterwell.markdown.preferences.MarkdownPreferencePage;
+import winterwell.markdown.preferences.PrefPageGeneral;
 import winterwell.utils.FailureException;
 import winterwell.utils.Process;
 import winterwell.utils.StrUtils;
@@ -253,7 +253,7 @@ public class MarkdownPage {
 
 		// Check if we should support the Multi-Markdown Metadata
 		boolean multiMarkdownMetadataSupport =
-				pStore.getBoolean(MarkdownPreferencePage.PREF_MULTIMARKDOWN_METADATA);
+				pStore.getBoolean(PrefPageGeneral.PREF_MULTIMARKDOWN_METADATA);
 		
 		// Multi-markdown header
 		if (multiMarkdownMetadataSupport) {
@@ -327,7 +327,7 @@ public class MarkdownPage {
 		}
 		
 		boolean githubSyntaxSupport =
-				pStore.getBoolean(MarkdownPreferencePage.PREF_GITHUB_SYNTAX);
+				pStore.getBoolean(PrefPageGeneral.PREF_GITHUB_SYNTAX);
 		
 		boolean inCodeBlock = false;
 		
@@ -539,7 +539,7 @@ public class MarkdownPage {
 	public String html() {
 		// Section numbers??
 		boolean sectionNumbers = pStore
-				.getBoolean(MarkdownPreferencePage.PREF_SECTION_NUMBERS);
+				.getBoolean(PrefPageGeneral.PREF_SECTION_NUMBERS);
 		// Chop out multi-markdown header
 		StringBuilder sb = new StringBuilder();
 		assert lines.size() == lineTypes.size();
@@ -558,7 +558,7 @@ public class MarkdownPage {
 		String text = sb.toString();
 		// Use external converter?
 		final String cmd = pStore
-				.getString(MarkdownPreferencePage.PREF_MARKDOWN_COMMAND);
+				.getString(PrefPageGeneral.PREF_MARKDOWN_COMMAND);
 		if (Utils.isBlank(cmd)
 				|| (cmd.startsWith("(") && cmd.contains("MarkdownJ"))) {
 			// Use MarkdownJ

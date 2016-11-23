@@ -13,7 +13,7 @@ public class OpenPreferences extends AbstractHandler {
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		PreferenceDialog pref = PreferencesUtil.createPreferenceDialogOn(
 				PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-				"winterwell.markdown.preferences.MarkdownPreferencePage", null, null);
+				"winterwell.markdown.preferences.PrefPageGeneral", null, null);
 		pref.open();
 		return null;
 	}

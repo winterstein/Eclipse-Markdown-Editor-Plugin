@@ -44,7 +44,8 @@ import winterwell.markdown.Activator;
 import winterwell.markdown.Log;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.pagemodel.MarkdownPage.Header;
-import winterwell.markdown.preferences.MarkdownPreferencePage;
+import winterwell.markdown.preferences.PrefPageGeneral;
+import winterwell.markdown.preferences.Prefs;
 import winterwell.markdown.views.MarkdownPreview;
 
 /**
@@ -113,17 +114,21 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 		prefChangeListener = new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(MarkdownPreferencePage.PREF_WORD_WRAP)) {
-					widget.setWordWrap(MarkdownPreferencePage.wordWrap());
+				if (event.getProperty().equals(PrefPageGeneral.PREF_WORD_WRAP)) {
+					widget.setWordWrap(isWordWrap());
 				}
 			}
 		};
 		pStore.addPropertyChangeListener(prefChangeListener);
-		// Switch on word-wrapping
-		if (MarkdownPreferencePage.wordWrap()) {
-			widget.setWordWrap(true);
-		}
+
+		// initialize word-wrapping
+		widget.setWordWrap(isWordWrap());
+
 		return viewer;
+	}
+
+	private boolean isWordWrap() {
+		return getPreferenceStore().getBoolean(Prefs.PREF_WORD_WRAP);
 	}
 
 	public void dispose() {
@@ -218,14 +223,14 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 
 	void updateTaskTags(IRegion region) {
 		try {
-			boolean useTags = pStore.getBoolean(MarkdownPreferencePage.PREF_TASK_TAGS);
+			boolean useTags = pStore.getBoolean(PrefPageGeneral.PREF_TASK_TAGS);
 			if (!useTags) return;
 			// Get task tags
 			// IPreferenceStore peuistore = EditorsUI.getPreferenceStore();
 			//// IPreferenceStore pStore_jdt =
 			// org.eclipse.jdt.core.compiler.getDefault().getPreferenceStore();
 			// String tagString = peuistore.getString("org.eclipse.jdt.core.compiler.taskTags");
-			String tagString = pStore.getString(MarkdownPreferencePage.PREF_TASK_TAGS_DEFINED);
+			String tagString = pStore.getString(PrefPageGeneral.PREF_TASK_TAGS_DEFINED);
 			List<String> tags = Arrays.asList(tagString.split(","));
 			// Get resource for editor
 			IFile docFile = getResource(this);

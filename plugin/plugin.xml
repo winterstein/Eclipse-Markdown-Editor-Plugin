@@ -4,12 +4,24 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="winterwell.markdown.preferences.MarkdownPreferencePage"
-            id="winterwell.markdown.preferences.MarkdownPreferencePage"
+            class="winterwell.markdown.preferences.PrefPageGeneral"
+            id="winterwell.markdown.preferences.PrefPageGeneral"
             name="Markdown Editor">
          <keywordReference
                id="winterwell.markdown.prefsKeywordReference">
          </keywordReference>
+      </page>
+      <page
+            category="winterwell.markdown.preferences.PrefPageGeneral"
+            class="winterwell.markdown.preferences.PrefPageStyles"
+            id="winterwell.markdown.preferences.PrefPageStyles"
+            name="Stylesheets">
+      </page>
+      <page
+            category="winterwell.markdown.preferences.PrefPageGeneral"
+            class="winterwell.markdown.preferences.PrefPageColoring"
+            id="winterwell.markdown.preferences.PrefPageHighlight"
+            name="Syntax Coloring">
       </page>
    </extension>
    <extension
