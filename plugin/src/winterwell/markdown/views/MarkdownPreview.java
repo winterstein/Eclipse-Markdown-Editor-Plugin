@@ -119,10 +119,12 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 					public void completed(ProgressEvent event) {
 						viewer.removeProgressListener(this);
 						viewer.execute(String.format("window.scrollTo(0,%d);", scrollTop)); //$NON-NLS-1$
+						viewer.setRedraw(true);
 					}
 				});
 			}
 
+			viewer.setRedraw(false);
 			viewer.setText(html);
 
 		} catch (Exception e) {
