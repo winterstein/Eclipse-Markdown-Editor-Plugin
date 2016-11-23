@@ -62,14 +62,23 @@ Increase version
 
 ### History
 
-- 1.0
+- 1.0 Initial release
 - 1.1 (24 Feb 2014) by Telmo Brugnara @tbrugz #40
-  - Rich color preferences #35 #37
+	- Rich color preferences #35 #37
 - 1.2 (Jan 2015) by Olivier Martin @oliviermartin #52
   - Update preview when the file is saved #48
   - MultiMarkdown metadata #49
   - GitHub code blocks #50
   - detecting links #51
   - open GFM View from Markdown View #53
+- 1.3 (Nov 2016) by Gerald Rosenberg
+	- Update viewer to recognize stylesheets
+	- Add preference choice to select between
+		- a default stylesheet 
+		- multiple builtin stylesheets 
+    	- stylesheets located on the platform filesystem
+    - Close viewer when editor closes
+    - Enabled updates to occur without changing the viewer vertical document position
+    - Updated to Java 1.8/Neon/Tycho 0.24
 
 <a href="http://with-eclipse.github.io/" target="_blank"><img alt="with-Eclipse logo" src="http://with-eclipse.github.io/with-eclipse-1.jpg" /></a>

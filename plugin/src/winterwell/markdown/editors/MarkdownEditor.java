@@ -34,6 +34,7 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPathEditorInput;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -127,6 +128,9 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 	}
 
 	public void dispose() {
+		if (MarkdownPreview.preview != null) {
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(MarkdownPreview.preview);
+		}
 		if (pStore != null) {
 			pStore.removePropertyChangeListener(prefChangeListener);
 		}
