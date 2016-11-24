@@ -75,8 +75,7 @@ public class Printer {
 			sb.append(toStringNumber((Number) x));
 			return;
 		}
-		if ((x instanceof ArrayList) || (x instanceof HashSet) || (x instanceof ArraySet)
-				|| x.getClass() == ArraysListType) {
+		if ((x instanceof ArrayList) || (x instanceof HashSet) || x.getClass() == ArraysListType) {
 			append(sb, (Collection<?>) x, ", ");
 			return;
 		}
