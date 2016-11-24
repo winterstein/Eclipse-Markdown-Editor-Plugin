@@ -54,6 +54,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<tycho.version>0.24.0</tycho.version>
 		<tycho-extras.version>0.24.0</tycho-extras.version>
+		<java.version>1.8</java.version>
 	</properties>
 
 	<modules>
