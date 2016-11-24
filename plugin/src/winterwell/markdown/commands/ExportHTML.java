@@ -9,13 +9,14 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPathEditorInput;
 
 import winterwell.markdown.editors.MarkdownEditor;
-import winterwell.utils.io.FileUtils;
-
+import winterwell.markdown.util.FileUtils;
 
 public class ExportHTML extends Action {
+
 	public ExportHTML() {
 		super("Export to HTML");
 	}
+
 	@Override
 	public void run() {
 		IEditorPart ed = ActionBarContributor.getActiveEditor();
@@ -34,5 +35,4 @@ public class ExportHTML extends Action {
 			FileUtils.write(file, html);
 		}
 	}
-
 }

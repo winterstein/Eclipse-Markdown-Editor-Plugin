@@ -19,7 +19,7 @@ import winterwell.markdown.editors.MarkdownEditor;
 import winterwell.markdown.pagemodel.MarkdownFormatter;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.pagemodel.MarkdownPage.KLineType;
-import winterwell.utils.containers.IntRange;
+import winterwell.markdown.util.IntRange;
 
 /**
  * TODO An action for formatting text (via hard wrapping, i.e. inserting returns).
@@ -86,7 +86,7 @@ public class FormatParagraph extends Action implements IHandler {
 				continue;
 			}
 			String paragraph = ed.getDocument().get(para.getOffset(), para.getLength());
-			// int lines = StrUtils.splitLines(paragraph).length;
+			// int lines = Strings.splitLines(paragraph).length;
 			String formatted = MarkdownFormatter.format(paragraph, cols);
 			// append formatted and move forward
 			sb.append(formatted);

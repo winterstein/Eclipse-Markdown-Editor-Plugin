@@ -10,8 +10,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import winterwell.utils.Mutable;
-import winterwell.utils.containers.Pair;
+import winterwell.markdown.util.Mutable;
+import winterwell.markdown.util.Pair;
 
 /**
  * A collection of general-purpose String handling methods.

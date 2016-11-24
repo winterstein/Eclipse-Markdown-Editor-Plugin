@@ -15,17 +15,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.markdownj.MarkdownProcessor;
 
 import winterwell.markdown.Activator;
 import winterwell.markdown.StringMethods;
 import winterwell.markdown.preferences.PrefPageGeneral;
-import winterwell.utils.FailureException;
-import winterwell.utils.Process;
-import winterwell.utils.StrUtils;
-import winterwell.utils.Utils;
-import winterwell.utils.io.FileUtils;
-
-import com.petebevin.markdown.MarkdownProcessor;
+import winterwell.markdown.util.FailureException;
+import winterwell.markdown.util.FileUtils;
+import winterwell.markdown.util.Process;
+import winterwell.markdown.util.Strings;
 
 /**
  * Understands Markdown syntax.
@@ -64,6 +62,7 @@ public class MarkdownPage {
 	 * @author daniel
 	 */
 	public class Header {
+
 		/**
 		 * 1 = top-level (i.e. #), 2= 2nd-level (i.e. ##), etc.
 		 */
@@ -86,40 +85,34 @@ public class MarkdownPage {
 		}
 
 		/**
-		 * 
 		 * @return the next section (at this depth if possible), null if none
 		 */
 		public Header getNext() {
 			if (parent == null) {
 				int ti = level1Headers.indexOf(this);
-				if (ti == -1 || ti == level1Headers.size() - 1)
-					return null;
+				if (ti == -1 || ti == level1Headers.size() - 1) return null;
 				return level1Headers.get(ti + 1);
 			}
 			int i = parent.subHeaders.indexOf(this);
 			assert i != -1 : this;
-			if (i == parent.subHeaders.size() - 1)
-				return parent.getNext();
+			if (i == parent.subHeaders.size() - 1) return parent.getNext();
 			return parent.subHeaders.get(i + 1);
 		}
+
 		/**
-		 * 
 		 * @return the next section (at this depth if possible), null if none
 		 */
 		public Header getPrevious() {
 			if (parent == null) {
 				int ti = level1Headers.indexOf(this);
-				if (ti == -1 || ti == 0)
-					return null;
+				if (ti == -1 || ti == 0) return null;
 				return level1Headers.get(ti - 1);
 			}
 			int i = parent.subHeaders.indexOf(this);
 			assert i != -1 : this;
-			if (i == 0)
-				return parent.getPrevious();
+			if (i == 0) return parent.getPrevious();
 			return parent.subHeaders.get(i - 1);
 		}
-		
 
 		/**
 		 * The parent section. Can be null.
@@ -129,15 +122,11 @@ public class MarkdownPage {
 		/**
 		 * Create a marker for a section Header
 		 * 
-		 * @param level
-		 *            1 = top-level (i.e. #), 2= 2nd-level (i.e. ##), etc.
-		 * @param lineNumber
-		 *            The line on which this header occurs
-		 * @param heading
-		 *            The text of the Header, trimmed of #s
-		 * @param currentHeader
-		 *            The previous Header. This is used to find the parent
-		 *            section if there is one. Can be null.
+		 * @param level 1 = top-level (i.e. #), 2= 2nd-level (i.e. ##), etc.
+		 * @param lineNumber The line on which this header occurs
+		 * @param heading The text of the Header, trimmed of #s
+		 * @param currentHeader The previous Header. This is used to find the parent section if
+		 *            there is one. Can be null.
 		 */
 		Header(int level, int lineNumber, String heading, Header currentHeader) {
 			this.lineNumber = lineNumber;
@@ -194,7 +183,14 @@ public class MarkdownPage {
 	}
 
 	public enum KLineType {
-		NORMAL, H1, H2, H3, H4, H5, H6, BLANK,
+		NORMAL,
+		H1,
+		H2,
+		H3,
+		H4,
+		H5,
+		H6,
+		BLANK,
 		// TODO LIST, BLOCKQUOTE,
 		/** A line marking Markdown info about the preceding line, e.g. ====== */
 		MARKER,
@@ -206,18 +202,19 @@ public class MarkdownPage {
 	 * Information about each line.
 	 */
 	private List<KLineType> lineTypes;
-	private Map<Integer,Object> pageObjects = new HashMap<Integer, Object>();
+	private Map<Integer, Object> pageObjects = new HashMap<Integer, Object>();
 
 	// TODO meta-data, footnotes, tables, link & image attributes
 	private static Pattern multiMarkdownTag = Pattern.compile("^([\\w].*):(.*)");
 	private Map<String, String> multiMarkdownTags = new HashMap<String, String>();
-	
+
 	// Regular expression for Github support
-	private static Pattern githubURLDetection = Pattern.compile("((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])");
+	private static Pattern githubURLDetection = Pattern
+			.compile("((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])");
 
 	/**
-	 * The top-level headers. FIXME handle documents which have a 2nd level
-	 * header before any 1st level ones
+	 * The top-level headers. FIXME handle documents which have a 2nd level header before any 1st
+	 * level ones
 	 */
 	private final List<Header> level1Headers = new ArrayList<Header>();
 	private final IPreferenceStore pStore;
@@ -244,17 +241,16 @@ public class MarkdownPage {
 		level1Headers.clear();
 		lineTypes = new ArrayList<KLineType>(lines.size());
 		pageObjects.clear();
-		// Dummy level-1 header in case there are none		
+		// Dummy level-1 header in case there are none
 		Header dummyTopHeader = new Header(1, 0, "", null);
 		level1Headers.add(dummyTopHeader);
-		Header currentHeader = dummyTopHeader;		
-		// Identify line types		
+		Header currentHeader = dummyTopHeader;
+		// Identify line types
 		int lineNum = 0;
 
 		// Check if we should support the Multi-Markdown Metadata
-		boolean multiMarkdownMetadataSupport =
-				pStore.getBoolean(PrefPageGeneral.PREF_MULTIMARKDOWN_METADATA);
-		
+		boolean multiMarkdownMetadataSupport = pStore.getBoolean(PrefPageGeneral.PREF_MULTIMARKDOWN_METADATA);
+
 		// Multi-markdown header
 		if (multiMarkdownMetadataSupport) {
 			// The key is the text before the colon, and the data is the text
@@ -270,14 +266,14 @@ public class MarkdownPage {
 			// ends with the first whitespace only line. The metadata is
 			// stripped from the
 			// document before it is passed on to the syntax parser.
-			
+
 			//
 			// Check if the Metdatas are valid
 			//
 			boolean validMetadata = true;
 			for (lineNum = 0; lineNum < lines.size(); lineNum++) {
 				String line = lines.get(lineNum);
-				if (Utils.isBlank(line)) {
+				if (Strings.isBlank(line)) {
 					break;
 				}
 				Matcher m = multiMarkdownTag.matcher(line);
@@ -294,14 +290,14 @@ public class MarkdownPage {
 					}
 				}
 			}
-			
+
 			// Valid Metadatas have been found. We need to retrieve these keys/values.
 			if (validMetadata) {
 				String data = "";
 				String tag = "";
 				for (lineNum = 0; lineNum < lines.size(); lineNum++) {
 					String line = lines.get(lineNum);
-					if (Utils.isBlank(line)) {
+					if (Strings.isBlank(line)) {
 						break;
 					}
 					Matcher m = multiMarkdownTag.matcher(line);
@@ -311,26 +307,24 @@ public class MarkdownPage {
 						}
 						// Multi-line tag
 						lineTypes.add(KLineType.META);
-						data += StrUtils.LINEEND + line.trim();
+						data += Strings.EOL + line.trim();
 						multiMarkdownTags.put(tag, data);
 					} else {
 						lineTypes.add(KLineType.META);
 						tag = m.group(0);
 						data = m.group(1).trim();
-						if (m.group(1).endsWith(line))
-							multiMarkdownTags.put(tag, data);
+						if (m.group(1).endsWith(line)) multiMarkdownTags.put(tag, data);
 					}
 				}
 			} else {
 				lineNum = 0;
 			}
 		}
-		
-		boolean githubSyntaxSupport =
-				pStore.getBoolean(PrefPageGeneral.PREF_GITHUB_SYNTAX);
-		
+
+		boolean githubSyntaxSupport = pStore.getBoolean(PrefPageGeneral.PREF_GITHUB_SYNTAX);
+
 		boolean inCodeBlock = false;
-		
+
 		for (; lineNum < lines.size(); lineNum++) {
 			String line = lines.get(lineNum);
 			// Code blocks
@@ -355,8 +349,7 @@ public class MarkdownPage {
 				}
 				// Create a Header object
 				if (h > 0) {
-					if (underline == -1)
-						lineTypes.add(KLineType.values()[h]);
+					if (underline == -1) lineTypes.add(KLineType.values()[h]);
 					Header header = new Header(h, hLineNum, hLine, currentHeader);
 					if (h == 1) {
 						level1Headers.add(header);
@@ -369,14 +362,14 @@ public class MarkdownPage {
 			// TODO List
 			// TODO Block quote
 			// Blank line
-			if (Utils.isBlank(line)) {
+			if (Strings.isBlank(line)) {
 				lineTypes.add(KLineType.BLANK);
 				continue;
 			}
 			// Normal
 			lineTypes.add(KLineType.NORMAL);
 		} // end line-loop
-		// Remove dummy header?
+			 // Remove dummy header?
 		if (dummyTopHeader.getSubHeaders().size() == 0) {
 			level1Headers.remove(dummyTopHeader);
 		}
@@ -402,10 +395,10 @@ public class MarkdownPage {
 					lines.set(lineNum, "    " + line);
 				}
 			}
-			
+
 			/*
-			 * Support for URL Detection
-			 * We search for links that are not captured by Markdown syntax
+			 * Support for URL Detection We search for links that are not captured by Markdown
+			 * syntax
 			 */
 			for (lineNum = 0; lineNum < lines.size(); lineNum++) {
 				String line = lines.get(lineNum);
@@ -419,39 +412,31 @@ public class MarkdownPage {
 					Matcher m = githubURLDetection.matcher(line);
 					while (m.find()) {
 						// Ignore the URL following the format <link>
-						if ((m.start() - 1 >= 0) && (m.end() < line.length()) &&
-							(line.charAt(m.start() - 1) == '<') &&
-							(line.charAt(m.end()) == '>'))
-						{
+						if ((m.start() - 1 >= 0) && (m.end() < line.length()) && (line.charAt(m.start() - 1) == '<')
+								&& (line.charAt(m.end()) == '>')) {
 							continue;
 						}
-	
+
 						// Ignore the URL following the format [description](link)
-						if ((m.start() - 2 >= 0) && (m.end() < line.length()) &&
-							(line.charAt(m.start() - 2) == ']') &&
-							(line.charAt(m.start() - 1) == '(') &&
-							(line.charAt(m.end()) == ')'))
-						{
+						if ((m.start() - 2 >= 0) && (m.end() < line.length()) && (line.charAt(m.start() - 2) == ']')
+								&& (line.charAt(m.start() - 1) == '(') && (line.charAt(m.end()) == ')')) {
 							continue;
 						}
-	
+
 						// Ignore the URL following the format [description](link "title")
-						if ((m.start() - 2 >= 0) && (m.end() + 1 < line.length()) &&
-							(line.charAt(m.start() - 2) == ']') &&
-							(line.charAt(m.start() - 1) == '(') &&
-							(line.charAt(m.end()) == ' ') &&
-							(line.charAt(m.end() + 1) == '"'))
-						{
+						if ((m.start() - 2 >= 0) && (m.end() + 1 < line.length()) && (line.charAt(m.start() - 2) == ']')
+								&& (line.charAt(m.start() - 1) == '(') && (line.charAt(m.end()) == ' ')
+								&& (line.charAt(m.end() + 1) == '"')) {
 							continue;
 						}
-						
+
 						if (m.start() - 1 >= 0) {
 							// Case when the link is at the beginning of the string
 							line = line.substring(0, m.start()) + "<" + m.group(0) + ">" + line.substring(m.end());
 						} else {
 							line = "<" + m.group(0) + ">" + line.substring(m.end());
 						}
-						
+
 						// We replaced the string in the array
 						lines.set(lineNum, line);
 						urlReplaced = true;
@@ -468,7 +453,7 @@ public class MarkdownPage {
 	 * @return true if line is just cs (and whitespace at the start/end)
 	 */
 	boolean just(String line, char c) {
-		return line.matches("\\s*"+c+"+\\s*");
+		return line.matches("\\s*" + c + "+\\s*");
 	}
 
 	/**
@@ -477,18 +462,15 @@ public class MarkdownPage {
 	 */
 	private int numHash(String line) {
 		for (int i = 0; i < line.length(); i++) {
-			if (line.charAt(i) != '#')
-				return i;
+			if (line.charAt(i) != '#') return i;
 		}
 		return line.length();
 	}
 
 	/**
-	 * 
-	 * @param parent
-	 *            Can be null for top-level
-	 * @return List of sub-headers. Never null. FIXME handle documents which
-	 *         have a 2nd level header before any 1st level ones
+	 * @param parent Can be null for top-level
+	 * @return List of sub-headers. Never null. FIXME handle documents which have a 2nd level header
+	 *         before any 1st level ones
 	 */
 	public List<Header> getHeadings(Header parent) {
 		if (parent == null) {
@@ -538,15 +520,13 @@ public class MarkdownPage {
 	 */
 	public String html() {
 		// Section numbers??
-		boolean sectionNumbers = pStore
-				.getBoolean(PrefPageGeneral.PREF_SECTION_NUMBERS);
+		boolean sectionNumbers = pStore.getBoolean(PrefPageGeneral.PREF_SECTION_NUMBERS);
 		// Chop out multi-markdown header
 		StringBuilder sb = new StringBuilder();
 		assert lines.size() == lineTypes.size();
 		for (int i = 0, n = lines.size(); i < n; i++) {
 			KLineType type = lineTypes.get(i);
-			if (type == KLineType.META)
-				continue;
+			if (type == KLineType.META) continue;
 			String line = lines.get(i);
 			if (sectionNumbers && isHeader(type) && line.contains("$section")) {
 				// TODO Header section = headers.get(i);
@@ -557,10 +537,8 @@ public class MarkdownPage {
 		}
 		String text = sb.toString();
 		// Use external converter?
-		final String cmd = pStore
-				.getString(PrefPageGeneral.PREF_MARKDOWN_COMMAND);
-		if (Utils.isBlank(cmd)
-				|| (cmd.startsWith("(") && cmd.contains("MarkdownJ"))) {
+		final String cmd = pStore.getString(PrefPageGeneral.PREF_MARKDOWN_COMMAND);
+		if (Strings.isBlank(cmd) || (cmd.startsWith("(") && cmd.contains("MarkdownJ"))) {
 			// Use MarkdownJ
 			MarkdownProcessor markdown = new MarkdownProcessor();
 			// MarkdownJ doesn't convert £s for some reason
@@ -568,29 +546,25 @@ public class MarkdownPage {
 			String html = markdown.markdown(text);
 			return html;
 		}
+
 		// Attempt to run external command
 		try {
 			final File md = File.createTempFile("tmp", ".md");
 			FileUtils.write(md, text);
-			Process process = new Process(cmd+" "+md.getAbsolutePath());
+			Process process = new Process(cmd + " " + md.getAbsolutePath());
 			process.run();
 			int ok = process.waitFor(10000);
-			if (ok != 0) throw new FailureException(cmd+" failed:\n"+process.getError());
+			if (ok != 0) throw new FailureException(cmd + " failed:\n" + process.getError());
 			String html = process.getOutput();
 			FileUtils.delete(md);
 			return html;
 		} catch (Exception e) {
-			throw Utils.runtime(e);
+			throw new RuntimeException(e);
 		}
 	}
 
-	/**
-	 * @param type
-	 * @return
-	 */
 	private boolean isHeader(KLineType type) {
-		return type == KLineType.H1 || type == KLineType.H2
-				|| type == KLineType.H3 || type == KLineType.H4
+		return type == KLineType.H1 || type == KLineType.H2 || type == KLineType.H3 || type == KLineType.H4
 				|| type == KLineType.H5 || type == KLineType.H6;
 	}
 
@@ -615,12 +589,7 @@ public class MarkdownPage {
 		return Collections.unmodifiableList(lineTypes);
 	}
 
-	/**
-	 * @param line
-	 * @return
-	 */
-	public Object getPageObject(int line) {		
+	public Object getPageObject(int line) {
 		return pageObjects.get(line);
 	}
-
 }

@@ -46,9 +46,11 @@
 									<groupId>org.markdownj</groupId>
 									<artifactId>markdownj-core</artifactId>
 									<version>0.4</version>
+									<type>jar</type>
 									<overWrite>true</overWrite>
 								</artifactItem>
 							</artifactItems>
+							<outputDirectory>lib</outputDirectory> 
 							<stripVersion>true</stripVersion>
 							<overWriteRelease>true</overWriteRelease>
 							<overWriteSnapshots>true</overWriteSnapshots>

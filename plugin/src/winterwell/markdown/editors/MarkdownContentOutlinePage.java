@@ -42,9 +42,7 @@ import winterwell.markdown.Log;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.pagemodel.MarkdownPage.Header;
 import winterwell.markdown.pagemodel.MarkdownPage.KLineType;
-import winterwell.utils.StrUtils;
-import winterwell.utils.Utils;
-import winterwell.utils.web.WebUtils;
+import winterwell.markdown.util.Strings;
 
 /**
  * @author Daniel Winterstein
@@ -189,11 +187,11 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 				String text;
 				try {
 					text = fTextEditor.getDocument().get(region.getOffset(), region.getLength());
-					text = WebUtils.stripTags(text);
+					text = Strings.stripTags(text);
 					text = text.replaceAll("#", "").trim();
 					assert text.startsWith(hText);
 					text = text.substring(hText.length());
-					int wc = StrUtils.wordCount(text);
+					int wc = Strings.wordCount(text);
 					return hText + " (" + wc + ":" + text.length() + ")";
 				} catch (BadLocationException e) {
 					return hText;
@@ -247,7 +245,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 				try {
 					doMove(-1);
 				} catch (BadLocationException e) {
-					throw Utils.runtime(e);
+					throw new RuntimeException(e);
 				}
 			}
 		};
@@ -261,7 +259,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 				try {
 					doMove(1);
 				} catch (BadLocationException e) {
-					throw Utils.runtime(e);
+					throw new RuntimeException(e);
 				}
 			}
 		};
@@ -288,7 +286,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 				try {
 					doSyncToEditor();
 				} catch (BadLocationException e) {
-					throw Utils.runtime(e);
+					throw new RuntimeException(e);
 				}
 			}
 		};
@@ -464,7 +462,7 @@ public final class MarkdownContentOutlinePage extends ContentOutlinePage {
 			int length = ei.getOffset() + ei.getLength() - offset;
 			return new Region(offset, length);
 		} catch (BadLocationException ex) {
-			throw Utils.runtime(ex);
+			throw new RuntimeException(ex);
 		}
 	}
 

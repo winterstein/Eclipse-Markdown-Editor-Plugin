@@ -19,23 +19,5 @@ Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.core.internal.resources,
  org.eclipse.jface.text,
  org.eclipse.ui.texteditor
-Bundle-ClassPath: .,target/classes,lib/markdownj-1.0.2b4-0.3.0.jar,
- lib/winterwell.utils.jar,
- lib/net.sf.paperclips_1.0.1.jar
-Export-Package: com.petebevin.markdown,
- com.petebevin.markdown.test,
- net.sf.paperclips,
- net.sf.paperclips.decorator,
- winterwell.markdown,
- winterwell.markdown.editors,
- winterwell.markdown.pagemodel,
- winterwell.markdown.preferences,
- winterwell.markdown.views,
- winterwell.utils,
- winterwell.utils.containers,
- winterwell.utils.gui,
- winterwell.utils.io,
- winterwell.utils.reporting,
- winterwell.utils.threads,
- winterwell.utils.time,
- winterwell.utils.web
+Bundle-ClassPath: .,
+ lib/markdownj-core.jar
