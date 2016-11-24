@@ -19,26 +19,27 @@ import java.util.regex.Pattern;
 
 public final class Strings {
 
+	public static final String ISO_LATIN = "ISO-8859-1";
+	public static final String UTF_8 = "UTF-8";
+	public static final String EOL = System.getProperty("line.separator");
+
 	public static final String APOSTROPHES = "'`\u2019\u2018\u2019\u02BC";
-	public static final String ARRAY[] = new String[0];
 	public static final Pattern ASCII_PUNCTUATION = Pattern
 			.compile("[.<>,@~\\{\\}\\[\\]-_+=()*%?^$!\\\\/|\254:;#`'\"]");
 	public static final Pattern BLANK_LINE = Pattern.compile("^\\s+$", 8);
 	public static final String COMMON_BULLETS = "-*\uE00Co";
 	public static final String DASHES = "\u2010\u2011\u2012\u2013\u2014\u2015-";
-	public static final String ENCODING_STD_ISO_LATIN = "ISO-8859-1";
-	public static final String ENCODING_UTF8 = "UTF8";
-	public static final String EOL = System.getProperty("line.separator");
 	public static final Pattern LINEENDINGS = Pattern.compile("(\r\n|\r|\n)");
 	public static final String LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 	public static final String QUOTES = "\"\u201C\u201D\u201E\u201F\u275B\u275C\u275D\u275E\253\273";
-	private static final double TENS[];
 
 	public static final Pattern TAG_REGEX = Pattern.compile("<(/?[a-zA-Z][a-zA-Z0-9]*)[^>]*>", 32);
 	public static final Pattern pComment = Pattern.compile("<!-*.*?-+>", 32);
 	public static final Pattern pDocType = Pattern.compile("<!DOCTYPE.*?>", 34);
 	public static final Pattern pScriptOrStyle = Pattern.compile("<(script|style)[^<>]*>.+?</(script|style)>", 34);
 
+	public static final String ARRAY[] = new String[0];
+	private static final double TENS[];
 	static {
 		TENS = new double[20];
 		TENS[0] = Math.pow(10D, -6D);

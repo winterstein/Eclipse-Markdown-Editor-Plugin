@@ -20,4 +20,10 @@ Import-Package: org.eclipse.core.internal.resources,
  org.eclipse.jface.text,
  org.eclipse.ui.texteditor
 Bundle-ClassPath: .,
- lib/markdownj-core.jar
+ lib/markdownj-core.jar,
+ lib/commonmark.jar,
+ lib/txtmark.jar,
+ lib/pegdown.jar,
+ lib/parboiled-java.jar,
+ lib/parboiled-core.jar,
+ lib/asm-all.jar

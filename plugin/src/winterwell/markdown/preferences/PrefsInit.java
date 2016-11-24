@@ -20,8 +20,6 @@ import winterwell.markdown.Activator;
  */
 public class PrefsInit extends AbstractPreferenceInitializer implements Prefs {
 
-	private static final String MARKDOWNJ = "(use built-in MarkdownJ converter)";
-
 	private static final RGB DEF_DEFAULT = new RGB(0, 0, 0);
 	private static final RGB DEF_COMMENT = new RGB(128, 0, 0);
 	private static final RGB DEF_HEADER = new RGB(0, 128, 0);
@@ -37,7 +35,11 @@ public class PrefsInit extends AbstractPreferenceInitializer implements Prefs {
 		store.setDefault(PREF_TASK_TAGS, true);
 		store.setDefault(PREF_TASK_TAGS_DEFINED, "TODO,FIXME,??");
 
-		store.setDefault(PREF_MARKDOWN_COMMAND, MARKDOWNJ);
+		store.setDefault(PREF_MD_CONVERTER, KEY_MARDOWNJ);
+		store.setDefault(PREF_TXTMARK_SAFEMODE, false);
+		store.setDefault(PREF_TXTMARK_EXTENDED, true);
+
+		store.setDefault(PREF_EXTERNAL_COMMAND, "");
 		store.setDefault(PREF_SECTION_NUMBERS, true);
 
 		store.setDefault(PREF_CSS_DEFAULT, cssDefault());

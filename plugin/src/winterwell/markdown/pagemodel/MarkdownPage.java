@@ -5,7 +5,6 @@
  */
 package winterwell.markdown.pagemodel;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,14 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.markdownj.MarkdownProcessor;
 
 import winterwell.markdown.Activator;
 import winterwell.markdown.StringMethods;
 import winterwell.markdown.preferences.PrefPageGeneral;
-import winterwell.markdown.util.FailureException;
-import winterwell.markdown.util.FileUtils;
-import winterwell.markdown.util.Process;
 import winterwell.markdown.util.Strings;
 
 /**
@@ -516,7 +511,7 @@ public class MarkdownPage {
 	// }
 
 	/**
-	 * Get the HTML for this page. Uses the MarkdownJ project.
+	 * Get the HTML for this page.
 	 */
 	public String html() {
 		// Section numbers??
@@ -536,31 +531,9 @@ public class MarkdownPage {
 			sb.append(line);
 		}
 		String text = sb.toString();
-		// Use external converter?
-		final String cmd = pStore.getString(PrefPageGeneral.PREF_MARKDOWN_COMMAND);
-		if (Strings.isBlank(cmd) || (cmd.startsWith("(") && cmd.contains("MarkdownJ"))) {
-			// Use MarkdownJ
-			MarkdownProcessor markdown = new MarkdownProcessor();
-			// MarkdownJ doesn't convert £s for some reason
-			text = text.replace("£", "&pound;");
-			String html = markdown.markdown(text);
-			return html;
-		}
 
-		// Attempt to run external command
-		try {
-			final File md = File.createTempFile("tmp", ".md");
-			FileUtils.write(md, text);
-			Process process = new Process(cmd + " " + md.getAbsolutePath());
-			process.run();
-			int ok = process.waitFor(10000);
-			if (ok != 0) throw new FailureException(cmd + " failed:\n" + process.getError());
-			String html = process.getOutput();
-			FileUtils.delete(md);
-			return html;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		MdConverter converter = new MdConverter();
+		return converter.convert(text);
 	}
 
 	private boolean isHeader(KLineType type) {

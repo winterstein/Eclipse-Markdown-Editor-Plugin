@@ -25,6 +25,42 @@
 			<version>0.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.atlassian.commonmark</groupId>
+			<artifactId>commonmark</artifactId>
+			<version>0.7.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.pegdown</groupId>
+			<artifactId>pegdown</artifactId>
+			<version>1.6.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.parboiled</groupId>
+			<artifactId>parboiled-core</artifactId>
+			<version>1.1.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.parboiled</groupId>
+			<artifactId>parboiled-java</artifactId>
+			<version>1.1.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-all</artifactId>
+			<version>4.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.rjeschke</groupId>
+			<artifactId>txtmark</artifactId>
+			<version>0.13</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -42,6 +78,7 @@
 						</goals>
 						<configuration>
 							<artifactItems>
+
 								<artifactItem>
 									<groupId>org.markdownj</groupId>
 									<artifactId>markdownj-core</artifactId>
@@ -49,8 +86,57 @@
 									<type>jar</type>
 									<overWrite>true</overWrite>
 								</artifactItem>
+
+								<artifactItem>
+									<groupId>org.pegdown</groupId>
+									<artifactId>pegdown</artifactId>
+									<version>1.6.0</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+								</artifactItem>
+
+								<artifactItem>
+									<groupId>org.parboiled</groupId>
+									<artifactId>parboiled-core</artifactId>
+									<version>1.1.7</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+								</artifactItem>
+
+								<artifactItem>
+									<groupId>org.parboiled</groupId>
+									<artifactId>parboiled-java</artifactId>
+									<version>1.1.7</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+								</artifactItem>
+
+								<artifactItem>
+									<groupId>org.ow2.asm</groupId>
+									<artifactId>asm-all</artifactId>
+									<version>4.0</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+								</artifactItem>
+
+								<artifactItem>
+									<groupId>com.atlassian.commonmark</groupId>
+									<artifactId>commonmark</artifactId>
+									<version>0.7.1</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+								</artifactItem>
+
+								<artifactItem>
+									<groupId>com.github.rjeschke</groupId>
+									<artifactId>txtmark</artifactId>
+									<version>0.13</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+								</artifactItem>
+
 							</artifactItems>
-							<outputDirectory>lib</outputDirectory> 
+							<outputDirectory>lib</outputDirectory>
 							<stripVersion>true</stripVersion>
 							<overWriteRelease>true</overWriteRelease>
 							<overWriteSnapshots>true</overWriteSnapshots>
