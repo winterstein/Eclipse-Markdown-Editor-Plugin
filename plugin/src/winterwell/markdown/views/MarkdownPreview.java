@@ -36,14 +36,17 @@ import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 
-import winterwell.markdown.Activator;
 import winterwell.markdown.Log;
-import winterwell.markdown.commands.ActionBarContributor;
+import winterwell.markdown.MarkdownUIPlugin;
+import winterwell.markdown.editors.ActionBarContributor;
 import winterwell.markdown.editors.MarkdownEditor;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.preferences.Prefs;
+import winterwell.markdown.util.Strings;
 
 public class MarkdownPreview extends ViewPart implements Prefs {
+
+	public static final String ID = "winterwell.markdown.views.MarkdownPreview";
 
 	// script to return the current top scroll position of the browser widget
 	private static final String GETSCROLLTOP = "function getScrollTop() { " //$NON-NLS-1$
@@ -53,11 +56,6 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 			+ "var D=document.documentElement;" //$NON-NLS-1$
 			+ "D=(D.clientHeight)?D:B;return D.scrollTop;}" //$NON-NLS-1$
 			+ "}; return getScrollTop();"; //$NON-NLS-1$
-
-	private static final String EOL = System.getProperty("line.separator");
-
-	private static final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-	private static final IPath location = root.getLocation();
 
 	public static MarkdownPreview preview = null;
 	private Browser viewer = null;
@@ -81,7 +79,7 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 	public MarkdownPreview() {
 		preview = this;
 		styleListener = new StyleListener();
-		Activator.getDefault().getPreferenceStore().addPropertyChangeListener(styleListener);
+		MarkdownUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(styleListener);
 	}
 
 	/**
@@ -130,13 +128,13 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 		} catch (Exception e) {
 			StringWriter errors = new StringWriter();
 			e.printStackTrace(new PrintWriter(errors));
-			Log.error(e.getLocalizedMessage() + EOL + errors.toString());
+			Log.error(e.getLocalizedMessage() + Strings.EOL + errors.toString());
 
 			List<Status> lines = new ArrayList<>();
 			for (StackTraceElement line : e.getStackTrace()) {
-				lines.add(new Status(IStatus.ERROR, Activator.PLUGIN_ID, line.toString()));
+				lines.add(new Status(IStatus.ERROR, MarkdownUIPlugin.PLUGIN_ID, line.toString()));
 			}
-			MultiStatus status = new MultiStatus(Activator.PLUGIN_ID, IStatus.ERROR,
+			MultiStatus status = new MultiStatus(MarkdownUIPlugin.PLUGIN_ID, IStatus.ERROR,
 					lines.toArray(new Status[lines.size()]), e.getLocalizedMessage(), e);
 			ErrorDialog.openError(null, "Viewer error", e.getMessage(), status);
 		}
@@ -154,7 +152,7 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 
 	@Override
 	public void dispose() {
-		Activator.getDefault().getPreferenceStore().removePropertyChangeListener(styleListener);
+		MarkdownUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(styleListener);
 		viewer = null;
 		super.dispose();
 	}
@@ -181,7 +179,7 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 		if (pathname != null) return pathname;
 
 		// 3) read the file identified by the pref key 'PREF_CSS_CUSTOM' from the filesystem
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		IPreferenceStore store = MarkdownUIPlugin.getDefault().getPreferenceStore();
 		String customCss = store.getString(PREF_CSS_CUSTOM);
 		if (!customCss.isEmpty()) {
 			File file = new File(customCss);
@@ -203,7 +201,7 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 		}
 
 		// 5) read 'markdown.css' from the bundle
-		Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
+		Bundle bundle = Platform.getBundle(MarkdownUIPlugin.PLUGIN_ID);
 		URL url = FileLocator.find(bundle, new Path("resources/" + DEF_MDCSS), null);
 		try {
 			url = FileLocator.toFileURL(url);
@@ -217,12 +215,14 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 	private String find(IPath styles) {
 		String name = styles.lastSegment();
 		IPath base = styles.removeLastSegments(1);
+
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IContainer dir = root.getContainerForLocation(base);
 
 		while (dir.getType() != IResource.ROOT) {
 			IResource member = dir.findMember(name);
 			if (member != null) {
-				return location.append(member.getFullPath()).toFile().toURI().toString();
+				return root.getLocation().append(member.getFullPath()).toFile().toURI().toString();
 			}
 			dir = dir.getParent();
 		}
@@ -230,12 +230,12 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 	}
 
 	private String addHeader(String html, String base, String style) {
-		StringBuilder sb = new StringBuilder("<html><head>" + EOL);
-		if (base != null) sb.append("<base href='" + base + "' />" + EOL);
+		StringBuilder sb = new StringBuilder("<html><head>" + Strings.EOL);
+		if (base != null) sb.append("<base href='" + base + "' />" + Strings.EOL);
 		if (style != null) {
-			sb.append("<link rel='stylesheet' type='text/css' href='" + style + "' media='screen' />" + EOL);
+			sb.append("<link rel='stylesheet' type='text/css' href='" + style + "' media='screen' />" + Strings.EOL);
 		}
-		sb.append("</head><body>" + EOL + html + EOL + "</body></html>");
+		sb.append("</head><body>" + Strings.EOL + html + Strings.EOL + "</body></html>");
 		return sb.toString();
 	}
 

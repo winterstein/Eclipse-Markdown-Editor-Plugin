@@ -15,6 +15,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.ISourceViewer;
 
 import winterwell.markdown.Log;
+import winterwell.markdown.editors.ActionBarContributor;
 import winterwell.markdown.editors.MarkdownEditor;
 import winterwell.markdown.pagemodel.MarkdownFormatter;
 import winterwell.markdown.pagemodel.MarkdownPage;

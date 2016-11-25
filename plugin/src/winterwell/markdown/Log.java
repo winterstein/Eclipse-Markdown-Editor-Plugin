@@ -32,11 +32,11 @@ public class Log {
 	}
 
 	public static IStatus createStatus(int severity, int code, String message, Throwable exception) {
-		return new Status(severity, Activator.PLUGIN_ID, code, message, exception);
+		return new Status(severity, MarkdownUIPlugin.PLUGIN_ID, code, message, exception);
 	}
 
 	public static void log(IStatus status) {
-		ILog log = Activator.getDefault().getLog();
+		ILog log = MarkdownUIPlugin.getDefault().getLog();
 		log.log(status);
 	}
 }

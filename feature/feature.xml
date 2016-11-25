@@ -50,6 +50,12 @@ The Markdown syntax is copyright (c) 2004, John Gruber. It is used under a BSD-s
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.swt"/>
       <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="com.ibm.icu"/>
+      <import plugin="org.eclipse.core.variables"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.debug.ui"/>
    </requires>
 
    <plugin

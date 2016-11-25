@@ -8,6 +8,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPathEditorInput;
 
+import winterwell.markdown.editors.ActionBarContributor;
 import winterwell.markdown.editors.MarkdownEditor;
 import winterwell.markdown.util.FileUtils;
 

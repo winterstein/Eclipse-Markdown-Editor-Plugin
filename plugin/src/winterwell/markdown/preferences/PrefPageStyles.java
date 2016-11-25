@@ -22,7 +22,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.osgi.framework.Bundle;
 
-import winterwell.markdown.Activator;
+import winterwell.markdown.MarkdownUIPlugin;
 
 public class PrefPageStyles extends FieldEditorPreferencePage implements IWorkbenchPreferencePage, Prefs {
 
@@ -32,7 +32,7 @@ public class PrefPageStyles extends FieldEditorPreferencePage implements IWorkbe
 	}
 
 	public void init(IWorkbench workbench) {
-		setPreferenceStore(Activator.getDefault().getPreferenceStore());
+		setPreferenceStore(MarkdownUIPlugin.getDefault().getPreferenceStore());
 	}
 
 	/** Creates the field editors. */
@@ -63,7 +63,7 @@ public class PrefPageStyles extends FieldEditorPreferencePage implements IWorkbe
 	// build list of builtin stylesheets
 	// key=name, value=bundle cache URL as string
 	private String[][] builtins() {
-		Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
+		Bundle bundle = Platform.getBundle(MarkdownUIPlugin.PLUGIN_ID);
 		URL url = bundle.getEntry("resources/");
 		File dir = null;
 		try {

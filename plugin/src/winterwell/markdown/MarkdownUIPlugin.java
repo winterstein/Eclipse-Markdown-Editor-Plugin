@@ -6,15 +6,15 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class MarkdownUIPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "winterwell.markdown";
 
 	// The shared instance
-	private static Activator plugin;
+	private static MarkdownUIPlugin plugin;
 
-	public Activator() {}
+	public MarkdownUIPlugin() {}
 
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -29,7 +29,7 @@ public class Activator extends AbstractUIPlugin {
 	/**
 	 * Returns the shared instance
 	 */
-	public static Activator getDefault() {
+	public static MarkdownUIPlugin getDefault() {
 		return plugin;
 	}
 }

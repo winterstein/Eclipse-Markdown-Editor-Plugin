@@ -14,7 +14,7 @@ import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.swt.SWT;
 
-import winterwell.markdown.Activator;
+import winterwell.markdown.MarkdownUIPlugin;
 import winterwell.markdown.preferences.PrefPageGeneral;
 
 /**
@@ -26,7 +26,7 @@ public class MDScanner extends RuleBasedScanner {
 	ColorManager cm;
     public MDScanner(ColorManager cm) {
     	this.cm = cm;
-    	IPreferenceStore pStore = Activator.getDefault().getPreferenceStore();
+    	IPreferenceStore pStore = MarkdownUIPlugin.getDefault().getPreferenceStore();
     	Token heading = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, PrefPageGeneral.PREF_HEADER)), null, SWT.BOLD));
     	Token comment = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, PrefPageGeneral.PREF_COMMENT))));
     	Token emphasis = new Token(new TextAttribute(cm.getColor(PreferenceConverter.getColor(pStore, PrefPageGeneral.PREF_DEFAULT)), null, SWT.ITALIC));

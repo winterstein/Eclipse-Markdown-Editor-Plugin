@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import winterwell.markdown.Activator;
+import winterwell.markdown.MarkdownUIPlugin;
 
 public class PrefPageGeneral extends FieldEditorPreferencePage implements IWorkbenchPreferencePage, Prefs {
 
@@ -44,7 +44,7 @@ public class PrefPageGeneral extends FieldEditorPreferencePage implements IWorkb
 	}
 
 	public void init(IWorkbench workbench) {
-		setPreferenceStore(Activator.getDefault().getPreferenceStore());
+		setPreferenceStore(MarkdownUIPlugin.getDefault().getPreferenceStore());
 	}
 
 	/** Create fields controlling general editor behavior */

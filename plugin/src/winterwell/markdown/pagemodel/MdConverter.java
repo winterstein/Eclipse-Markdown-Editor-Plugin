@@ -13,7 +13,7 @@ import com.github.rjeschke.txtmark.Configuration;
 import com.github.rjeschke.txtmark.Configuration.Builder;
 import com.github.rjeschke.txtmark.Processor;
 
-import winterwell.markdown.Activator;
+import winterwell.markdown.MarkdownUIPlugin;
 import winterwell.markdown.preferences.PrefPageGeneral;
 import winterwell.markdown.preferences.Prefs;
 import winterwell.markdown.util.FailureException;
@@ -27,7 +27,7 @@ public class MdConverter {
 
 	public MdConverter() {
 		super();
-		store = Activator.getDefault().getPreferenceStore();
+		store = MarkdownUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	public String convert(String text) {

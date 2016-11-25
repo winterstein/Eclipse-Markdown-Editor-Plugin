@@ -14,8 +14,8 @@
 	<artifactId>winterwell.markdown</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
-	<name>Markdown Editor</name>
-	<description>Markdown Editor</description>
+	<name>Markdown Editor plugin</name>
+	<description>Markdown Editor plugin</description>
 
 	<dependencies>
 

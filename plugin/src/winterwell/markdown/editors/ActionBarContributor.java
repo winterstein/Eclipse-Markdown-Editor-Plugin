@@ -1,10 +1,12 @@
-package winterwell.markdown.commands;
+package winterwell.markdown.editors;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.editors.text.TextEditorActionContributor;
 
+import winterwell.markdown.commands.ExportHTML;
+import winterwell.markdown.commands.FormatParagraph;
 import winterwell.markdown.views.MarkdownPreview;
 
 public class ActionBarContributor extends TextEditorActionContributor {

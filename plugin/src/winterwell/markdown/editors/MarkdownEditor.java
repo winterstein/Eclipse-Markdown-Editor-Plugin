@@ -40,7 +40,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
-import winterwell.markdown.Activator;
+import winterwell.markdown.MarkdownUIPlugin;
 import winterwell.markdown.Log;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.pagemodel.MarkdownPage.Header;
@@ -74,7 +74,7 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 
 	public MarkdownEditor() {
 		super();
-		pStore = Activator.getDefault().getPreferenceStore();
+		pStore = MarkdownUIPlugin.getDefault().getPreferenceStore();
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new MDConfiguration(colorManager, getPreferenceStore()));
 	}

@@ -13,7 +13,7 @@ import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.RGB;
 import org.osgi.framework.Bundle;
 
-import winterwell.markdown.Activator;
+import winterwell.markdown.MarkdownUIPlugin;
 
 /**
  * Initialize default preference values
@@ -28,7 +28,7 @@ public class PrefsInit extends AbstractPreferenceInitializer implements Prefs {
 	private static final RGB DEF_CODE_BG = new RGB(244, 244, 244);
 
 	public void initializeDefaultPreferences() {
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		IPreferenceStore store = MarkdownUIPlugin.getDefault().getPreferenceStore();
 
 		store.setDefault(PREF_WORD_WRAP, false);
 		store.setDefault(PREF_FOLDING, true);
@@ -57,7 +57,7 @@ public class PrefsInit extends AbstractPreferenceInitializer implements Prefs {
 
 	// get bundle cache URL for the default stylesheet
 	private String cssDefault() {
-		Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
+		Bundle bundle = Platform.getBundle(MarkdownUIPlugin.PLUGIN_ID);
 		URL url = FileLocator.find(bundle, new Path("resources/" + DEF_MDCSS), null);
 		try {
 			url = FileLocator.toFileURL(url);

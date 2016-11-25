@@ -35,26 +35,97 @@
          point="org.eclipse.ui.editors">
       <editor
             name="Markdown Editor"
-            extensions="txt,md,mdown,markdown,mdwn"
             icon="icons/markdown.png"
-            contributorClass="winterwell.markdown.commands.ActionBarContributor"
+            contributorClass="winterwell.markdown.editors.ActionBarContributor"
             class="winterwell.markdown.editors.MarkdownEditor"
             id="winterwell.markdown.editors.MarkdownEditor"
             default="true">
+         <contentTypeBinding
+               contentTypeId="winterwell.markdown.contentType.markdown">
+         </contentTypeBinding>
       </editor>
       
       <editor
             class="winterwell.markdown.editors.MarkdownEditor"
-            contributorClass="winterwell.markdown.commands.ActionBarContributor"
+            contributorClass="winterwell.markdown.editors.ActionBarContributor"
             default="true"
-            extensions="litcoffee"
             icon="icons/coffee.png"
             id="org.nodeclipse.ui.editors.LitCoffeeEditor"
-            name="LitCoffee (Markdown) Editor">
+            name="LitCoffee Markdown Editor">
+         <contentTypeBinding
+               contentTypeId="winterwell.markdown.contentType.litCoffee">
+         </contentTypeBinding>
       </editor>
       
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="winterwell.markdown"
+            name="Markdown">
+      </category>
+      <view
+            category="winterwell.markdown"
+            class="winterwell.markdown.views.MarkdownPreview"
+            icon="icons/markdown.png"
+            id="winterwell.markdown.views.MarkdownPreview"
+            name="Markdown View">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            file-extensions="md,mdown,markdown,mdwn"
+            id="winterwell.markdown.contentType.markdown"
+            name="Markdown"
+            priority="normal">
+      </content-type>
+      <content-type
+            file-extensions="litCoffee"
+            id="winterwell.markdown.contentType.litCoffee"
+            name="LitCoffee"
+            priority="normal">
+      </content-type>
+   </extension>
    
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="winterwell.markdown.commands.OpenPreferences"
+            id="winterwell.markdown.commands.Preferences"
+            name="Preferences">
+      </command>
+      <command
+            id="winterwell.markdown.commands.OpenMdView"
+            name="Open Markdown View">
+      </command>
+      <command
+            defaultHandler="winterwell.markdown.commands.OpenGfmView"
+            id="winterwell.markdown.commands.OpenGfmView"
+            name="Open GitHub Flavored Markdown View">
+      </command>
+      <command
+            defaultHandler="winterwell.markdown.commands.FormatParagraph"
+            description="Format current paragraph to fit margins"
+            id="winterwell.markdown.formatParagraphCommand"
+            name="Format paragraph">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="winterwell.markdown.commands.OpenMdView"
+            commandId="winterwell.markdown.commands.OpenMdView">
+         <activeWhen>
+            <with
+                  variable="activeEditorId">
+               <equals
+                     value="winterwell.markdown.editors.MarkdownEditor">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
+   </extension>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -91,49 +162,6 @@
       </menuContribution>
    </extension>
    <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="winterwell.markdown.commands.OpenPreferences"
-            id="winterwell.markdown.commands.Preferences"
-            name="Preferences">
-      </command>
-      <command
-            id="winterwell.markdown.commands.OpenMdView"
-            name="Open Markdown View">
-      </command>
-      <command
-            defaultHandler="winterwell.markdown.commands.OpenGfmView"
-            id="winterwell.markdown.commands.OpenGfmView"
-            name="Open GitHub Flavored Markdown View">
-      </command>
-      <command
-            defaultHandler="winterwell.markdown.commands.FormatParagraph"
-            description="Format current paragraph to fit margins"
-            id="winterwell.markdown.formatParagraphCommand"
-            name="Format paragraph">
-      </command>
-   </extension>
-   
-   <extension
-         point="org.eclipse.ui.views">
-      <category
-            id="winterwell.markdown"
-            name="Markdown"/>
-      <view
-            category="winterwell.markdown"
-            class="winterwell.markdown.views.MarkdownPreview"
-            icon="icons/markdown.png"
-            id="winterwell.markdown.views.MarkdownPreview"
-            name="Markdown View"/>
-   </extension>
-   <extension
-         point="org.eclipse.ui.keywords">
-      <keyword
-            id="winterwell.markdown.prefsKeywordReference"
-            label="word wrapping tool tags">
-      </keyword>
-   </extension>
-   <extension
          point="org.eclipse.ui.bindings">
       <key
             commandId="winterwell.markdown.formatParagraphCommand"
@@ -142,20 +170,12 @@
             sequence="Alt+Q">
       </key>
    </extension>
+   
    <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            class="winterwell.markdown.commands.OpenMdView"
-            commandId="winterwell.markdown.commands.OpenMdView">
-         <activeWhen>
-            <with
-                  variable="activeEditorId">
-               <equals
-                     value="winterwell.markdown.editors.MarkdownEditor">
-               </equals>
-            </with>
-         </activeWhen>
-      </handler>
+         point="org.eclipse.ui.keywords">
+      <keyword
+            id="winterwell.markdown.prefsKeywordReference"
+            label="word wrapping tool tags">
+      </keyword>
    </extension>
-
 </plugin>
