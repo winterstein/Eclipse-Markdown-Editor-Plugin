@@ -7,7 +7,6 @@ import org.eclipse.ui.editors.text.TextEditorActionContributor;
 
 import winterwell.markdown.commands.ExportHTML;
 import winterwell.markdown.commands.FormatParagraph;
-import winterwell.markdown.views.MarkdownPreview;
 
 public class ActionBarContributor extends TextEditorActionContributor {
 
@@ -23,10 +22,6 @@ public class ActionBarContributor extends TextEditorActionContributor {
 		if (bars != null) {
 			// todo bars.setGlobalActionHandler(ActionFactory.PRINT.getId(), print);
 			// bars.updateActionBars();
-		}
-		// Update preview?
-		if (MarkdownPreview.preview != null) {
-			MarkdownPreview.preview.update();
 		}
 	}
 
@@ -48,5 +43,4 @@ public class ActionBarContributor extends TextEditorActionContributor {
 			file.appendToGroup("import.ext", new ExportHTML());
 		}
 	}
-
 }

@@ -13,9 +13,11 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 public class MDConfiguration extends TextSourceViewerConfiguration {
 
 	private ColorManager colorManager;
+	// private OverlayPreferenceStore spellStore;
+	// private SpellingService spellService;
 
-	public MDConfiguration(ColorManager colorManager, IPreferenceStore prefStore) {
-		super(prefStore);
+	public MDConfiguration(ColorManager colorManager, IPreferenceStore store) {
+		super(store);
 		this.colorManager = colorManager;
 	}
 
@@ -30,25 +32,41 @@ public class MDConfiguration extends TextSourceViewerConfiguration {
 	}
 
 	@Override
-	public IReconciler getReconciler(ISourceViewer sourceViewer) {
-		return super.getReconciler(sourceViewer);
-
-		// if (fPreferenceStore == null ||
-		// !fPreferenceStore.getBoolean(SpellingService.PREFERENCE_SPELLING_ENABLED)) {
-		// return null;
-		// }
+	public IReconciler getReconciler(ISourceViewer viewer) {
+		// boolean global =
+		// fPreferenceStore.getBoolean(SpellingService.PREFERENCE_SPELLING_ENABLED);
+		// boolean local = fPreferenceStore.getBoolean(Prefs.PREF_SPELLING_ENABLED);
+		// if (local && !global) {
+		// SpellingService service = getSpellingService();
+		// if (service.getActiveSpellingEngineDescriptor(getSpellStore()) == null) {
+		// return super.getReconciler(viewer); // bail
+		// };
 		//
-		// SpellingService spellingService = MarkdownUIPlugin.getSpellingService();
-		// // EditorsUI.getSpellingService();
-		// if (spellingService.getActiveSpellingEngineDescriptor(fPreferenceStore) == null) return
-		// null;
-		//
-		// IReconcilingStrategy strategy = new SpellingReconcileStrategy(sourceViewer,
-		// spellingService);
+		// IReconcilingStrategy strategy = new SpellingReconcileStrategy(viewer, service);
 		// MonoReconciler reconciler = new MonoReconciler(strategy, false);
 		// reconciler.setDelay(500);
 		// return reconciler;
+		// }
+		return super.getReconciler(viewer);
 	}
+
+	// private SpellingService getSpellingService() {
+	// if (spellService == null) {
+	// spellService = new SpellingService(getSpellStore());
+	// }
+	// return spellService;
+	// }
+	//
+	// private IPreferenceStore getSpellStore() {
+	// if (spellStore == null) {
+	// OverlayKey[] keys = new OverlayKey[] {
+	// new OverlayKey(OverlayPreferenceStore.BOOLEAN, SpellingService.PREFERENCE_SPELLING_ENABLED)
+	// };
+	// this.spellStore = new OverlayPreferenceStore(fPreferenceStore, keys);
+	// this.spellStore.setValue(SpellingService.PREFERENCE_SPELLING_ENABLED, true);
+	// }
+	// return spellStore;
+	// }
 
 	@SuppressWarnings("unused")
 	@Override

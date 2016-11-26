@@ -2,7 +2,11 @@ package winterwell.markdown.preferences;
 
 public interface Prefs {
 
-	// Preference store keys
+	// preference related values
+	public static final String DEF_MDCSS = "markdown.css";
+	public static final String CSS = "css";
+
+	// preference store keys
 	public static final String PREF_FOLDING = "Pref_Folding";
 	public static final String PREF_WORD_WRAP = "Pref_WordWrap";
 	public static final String PREF_TASK_TAGS = "Pref_TaskTagsOn";
@@ -35,8 +39,8 @@ public interface Prefs {
 	public static final String PREF_CSS_DEFAULT = "Pref_Markdown_Css";
 	public static final String PREF_CSS_CUSTOM = "";
 
-	// Public preference related values
-	public static final String DEF_MDCSS = "markdown.css";
-	public static final String CSS = "css";
+	public static final String PREF_SPELLING_ENABLED = "Pref_Spelling_Enabled";
+
+	public static final String PREF_UPDATE_DELAY = "Pref_Update_Delay";
 
 }

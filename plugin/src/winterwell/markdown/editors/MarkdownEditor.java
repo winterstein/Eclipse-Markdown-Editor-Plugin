@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -30,63 +31,86 @@ import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
-import winterwell.markdown.MarkdownUIPlugin;
 import winterwell.markdown.Log;
+import winterwell.markdown.MarkdownUIPlugin;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.pagemodel.MarkdownPage.Header;
+import winterwell.markdown.preferences.EclipsePreferencesAdapter;
 import winterwell.markdown.preferences.PrefPageGeneral;
 import winterwell.markdown.preferences.Prefs;
-import winterwell.markdown.views.MarkdownPreview;
 
 /**
  * Text editor with markdown support.
  * 
  * @author Daniel Winterstein
  */
-public class MarkdownEditor extends TextEditor implements IDocumentListener {
+public class MarkdownEditor extends TextEditor {
 
-	/**
-	 * Maximum length for a task tag message
-	 */
+	public static final String ID = "winterwell.markdown.editors.MarkdownEditor";
+	public static final String ID2 = "org.nodeclipse.ui.editors.LitCoffeeEditor";
+
+	/** Maximum length for a task tag message */
 	private static final int MAX_TASK_MSG_LENGTH = 80;
+	private static final Annotation[] ANNOTATION_ARRAY = new Annotation[0];
+	private static final Position[] POSITION_ARRAY = new Position[0];
+
+	private MarkdownOutlinePage fOutlinePage;
 	private ColorManager colorManager;
-	private MarkdownContentOutlinePage fOutlinePage = null;
-
-	IDocument oldDoc = null;
-
 	private MarkdownPage page;
-
 	private boolean pageDirty = true;
 
+	private boolean haveRunFolding = false;
 	private ProjectionSupport projectionSupport;
-	private final IPreferenceStore pStore;
-	private IPropertyChangeListener prefChangeListener;
+	private Map<Annotation, Position> oldAnnotations = new HashMap<Annotation, Position>(0);
+
+	private final IDocumentListener docListener = new IDocumentListener() {
+
+		@Override
+		public void documentChanged(DocumentEvent event) {
+			pageDirty = true;
+		}
+
+		@Override
+		public void documentAboutToBeChanged(DocumentEvent event) {}
+	};
+
+	private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
+
+		@Override
+		public void propertyChange(PropertyChangeEvent event) {
+			if (event.getProperty().equals(PrefPageGeneral.PREF_WORD_WRAP)) {
+				getViewer().getTextWidget().setWordWrap(isWordWrap());
+			}
+		}
+	};
 
 	public MarkdownEditor() {
 		super();
-		pStore = MarkdownUIPlugin.getDefault().getPreferenceStore();
+		initPreferenceStore();
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new MDConfiguration(colorManager, getPreferenceStore()));
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
-		// Over-ride to add code-folding support
+		// add code-folding support
 		super.createPartControl(parent);
 		if (getSourceViewer() instanceof ProjectionViewer) {
 			ProjectionViewer viewer = (ProjectionViewer) getSourceViewer();
 			projectionSupport = new ProjectionSupport(viewer, getAnnotationAccess(), getSharedColors());
 			projectionSupport.install();
+
 			// turn projection mode on
 			viewer.doOperation(ProjectionViewer.TOGGLE);
 		}
@@ -102,27 +126,15 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 
 	@Override
 	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles) {
-		// if (true) return super.createSourceViewer(parent, ruler, styles);
 		// Create with code-folding
 		ISourceViewer viewer = new ProjectionViewer(parent, ruler, getOverviewRuler(), isOverviewRulerVisible(),
 				styles);
+
 		// ensure decoration support has been created and configured.
 		getSourceViewerDecorationSupport(viewer);
-		// Setup word-wrapping
-		final StyledText widget = viewer.getTextWidget();
-		// Listen to pref changes
-		prefChangeListener = new IPropertyChangeListener() {
-
-			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(PrefPageGeneral.PREF_WORD_WRAP)) {
-					widget.setWordWrap(isWordWrap());
-				}
-			}
-		};
-		pStore.addPropertyChangeListener(prefChangeListener);
 
 		// initialize word-wrapping
-		widget.setWordWrap(isWordWrap());
+		viewer.getTextWidget().setWordWrap(isWordWrap());
 
 		return viewer;
 	}
@@ -132,47 +144,44 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 	}
 
 	public void dispose() {
-		if (MarkdownPreview.preview != null) {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(MarkdownPreview.preview);
-		}
-		if (pStore != null) {
-			pStore.removePropertyChangeListener(prefChangeListener);
-		}
+		removePreferenceStoreListener();
 		colorManager.dispose();
 		super.dispose();
 	}
 
-	public void documentAboutToBeChanged(DocumentEvent event) {}
-
-	public void documentChanged(DocumentEvent event) {
-		pageDirty = true;
-	}
-
 	@Override
 	protected void doSetInput(IEditorInput input) throws CoreException {
-		// Detach from old
-		if (oldDoc != null) {
-			oldDoc.removeDocumentListener(this);
-			if (doc2editor.get(oldDoc) == this) doc2editor.remove(oldDoc);
-		}
-		// Set
+
+		// Remove old doc listener
+		if (getDocument() != null) getDocument().removeDocumentListener(docListener);
+
 		super.doSetInput(input);
-		// Attach as a listener to new doc
-		IDocument doc = getDocument();
-		oldDoc = doc;
-		if (doc == null) return;
-		doc.addDocumentListener(this);
-		doc2editor.put(doc, this);
-		// Initialise code folding
+
+		// Attach listener to new doc
+		getDocument().addDocumentListener(docListener);
+
+		// Initialize code folding
 		haveRunFolding = false;
 		updateSectionFoldingAnnotations(null);
 	}
 
-	@Override
-	protected void editorSaved() {
-		if (MarkdownPreview.preview != null) {
-			// Update the preview when the file is saved
-			MarkdownPreview.preview.update();
+	/**
+	 * Initializes the preference store for this editor.
+	 */
+	private void initPreferenceStore() {
+		List<IPreferenceStore> stores = new ArrayList<>(3);
+		stores.add(new EclipsePreferencesAdapter(InstanceScope.INSTANCE, MarkdownUIPlugin.PLUGIN_ID));
+		stores.add(EditorsUI.getPreferenceStore());
+		stores.add(PlatformUI.getPreferenceStore());
+
+		ChainedPreferenceStore store = new ChainedPreferenceStore(stores.toArray(new IPreferenceStore[stores.size()]));
+		store.addPropertyChangeListener(prefChangeListener);
+		setPreferenceStore(store);
+	}
+
+	private void removePreferenceStoreListener() {
+		if (getPreferenceStore() != null) {
+			getPreferenceStore().removePropertyChangeListener(prefChangeListener);
 		}
 	}
 
@@ -180,7 +189,7 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 	public Object getAdapter(Class required) {
 		if (IContentOutlinePage.class.equals(required)) {
 			if (fOutlinePage == null) {
-				fOutlinePage = new MarkdownContentOutlinePage(getDocumentProvider(), this);
+				fOutlinePage = new MarkdownOutlinePage(getDocumentProvider(), this);
 				if (getEditorInput() != null) fOutlinePage.setInput(getEditorInput());
 			}
 			return fOutlinePage;
@@ -207,7 +216,7 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 	}
 
 	/**
-	 * @return The text of the editor's document, or null if unavailable.
+	 * @return The text of the editor's current document, or null if unavailable.
 	 */
 	public String getText() {
 		IDocument doc = getDocument();
@@ -223,21 +232,16 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 
 	void updateTaskTags(IRegion region) {
 		try {
-			boolean useTags = pStore.getBoolean(PrefPageGeneral.PREF_TASK_TAGS);
+			boolean useTags = getPreferenceStore().getBoolean(PrefPageGeneral.PREF_TASK_TAGS);
 			if (!useTags) return;
 			// Get task tags
-			// IPreferenceStore peuistore = EditorsUI.getPreferenceStore();
-			//// IPreferenceStore pStore_jdt =
-			// org.eclipse.jdt.core.compiler.getDefault().getPreferenceStore();
-			// String tagString = peuistore.getString("org.eclipse.jdt.core.compiler.taskTags");
-			String tagString = pStore.getString(PrefPageGeneral.PREF_TASK_TAGS_DEFINED);
+			String tagString = getPreferenceStore().getString(PrefPageGeneral.PREF_TASK_TAGS_DEFINED);
 			List<String> tags = Arrays.asList(tagString.split(","));
 			// Get resource for editor
 			IFile docFile = getResource(this);
 			// Get existing tasks
 			IMarker[] taskMarkers = docFile.findMarkers(IMarker.TASK, true, IResource.DEPTH_INFINITE);
 			List<IMarker> markers = new ArrayList<IMarker>(Arrays.asList(taskMarkers));
-			// Collections.sort(markers, c) sort for efficiency
 			// Find tags in doc
 			List<String> text = getMarkdownPage().getText();
 			for (int i = 1; i <= text.size(); i++) {
@@ -264,23 +268,13 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 			for (IMarker m : markers) {
 				try {
 					m.delete();
-				} catch (Exception ex) {
-					//
-				}
+				} catch (Exception e) {}
 			}
-		} catch (Exception ex) {
-			//
-		}
+		} catch (Exception e) {}
 	}
 
 	/**
 	 * Find an existing marker, if there is one.
-	 * 
-	 * @param i
-	 * @param tagIndex
-	 * @param line
-	 * @param markers
-	 * @return
 	 */
 	private IMarker updateTaskTags2_checkExisting(int i, int tagIndex, String line, List<IMarker> markers) {
 		String tagMessage = line.substring(tagIndex).trim();
@@ -290,9 +284,7 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 				if (i != lineNum) continue;
 				String txt = ((String) marker.getAttribute(IMarker.MESSAGE)).trim();
 				if (tagMessage.equals(txt)) return marker;
-			} catch (Exception ex) {
-				// Ignore
-			}
+			} catch (Exception ex) {}
 		}
 		return null;
 	}
@@ -309,30 +301,12 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 	}
 
 	/**
-	 * @param doc
-	 * @return
-	 */
-	public static MarkdownEditor getEditor(IDocument doc) {
-		return doc2editor.get(doc);
-	}
-
-	private static final Map<IDocument, MarkdownEditor> doc2editor = new HashMap<IDocument, MarkdownEditor>();
-
-	/**
 	 * @param region
 	 */
 	public void updatePage(IRegion region) {
-		// if (!pageDirty) return;
 		updateTaskTags(region);
 		updateSectionFoldingAnnotations(region);
 	}
-
-	private static final Annotation[] ANNOTATION_ARRAY = new Annotation[0];
-
-	private static final Position[] POSITION_ARRAY = new Position[0];
-
-	private boolean haveRunFolding = false;
-	private Map<Annotation, Position> oldAnnotations = new HashMap<Annotation, Position>(0);
 
 	/**
 	 * @param region can be null
@@ -423,53 +397,4 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener {
 			}
 		}
 	}
-
 }
-
-/*
- * <?xml version="1.0" encoding="UTF-8" ?> - <templates> <template name="updateSWT"
- * description="Performs an update to an SWT control in the SWT thread" context="java"
- * enabled="true">${control}.getDisplay().syncExec(new Runnable() { public void run() {
- * ${control}.${cursor} } });</template> <template name="findView"
- * description="Find a workbench view by ID" context="java" enabled="true"
- * deleted="false">${viewType} ${view} = null; IWorkbenchWindow ${window} =
- * PlatformUI.getWorkbench().getActiveWorkbenchWindow(); if (${window} != null) { IWorkbenchPage
- * ${activePage} = ${window}.getActivePage(); if (${activePage} != null) ${view} = (${viewType})
- * ${activePage}.findView("${viewID}"); } if (${view} != null) { ${cursor}//${todo}: Add operations
- * for opened view }</template> <template name="getActiveEditor"
- * description="Retrieves the currently active editor in the active page" context="java"
- * enabled="true" deleted="false">IEditorPart ${editor} = null; IWorkbenchWindow ${window} =
- * PlatformUI.getWorkbench().getActiveWorkbenchWindow(); if (${window} != null) { IWorkbenchPage
- * ${activePage} = ${window}.getActivePage(); if (${activePage} != null) ${editor} =
- * ${activePage}.getActiveEditor(); } if (${editor} != null) { ${cursor}//${todo}: Add operations
- * for active editor }</template> IEditorPart editor = null; IWorkbenchWindow window =
- * PlatformUI.getWorkbench().getActiveWorkbenchWindow(); if (window != null) { IWorkbenchPage
- * activePage = window.getActivePage(); if (activePage != null) editor =
- * activePage.getActiveEditor(); } if (editor != null) { // todo: Add operations for active editor }
- * <template name="openDialog" description="Creates and opens a JFace dialog" context="java"
- * enabled="true" deleted="false">${dialogType} ${dialog} = new ${dialogType}(${cursor});
- * ${dialog}.create(); //${todo}: Complete dialog creation if (${dialog}.open() == Dialog.OK) {
- * //${todo}: Perform actions on success };</template> <template name="scanExtensionRegistry"
- * description="Scans the extension registry for extensions of a given extension point"
- * context="java" enabled="true" deleted="false">IExtensionRegistry ${registry} =
- * Platform.getExtensionRegistry(); IExtensionPoint ${point} =
- * ${registry}.getExtensionPoint(${pluginId}, ${expointId}); IExtension[] ${extensions} =
- * ${point}.getExtensions(); for (int ${index} = 0; ${index} < ${extensions}.length; ${index}++) {
- * IConfigurationElement[] ${elements} = ${extensions}[${index}].getConfigurationElements(); for
- * (int ${index2} = 0; ${index2} < ${elements}.length; ${index2}++) { IConfigurationElement
- * ${element} = ${elements}[${index2}]; String ${attValue} = ${element}.getAttribute(${attName});
- * ${cursor}//${todo}: Implement processing for configuration element } }</template> <template
- * name="showView" description="finds a workbench view by ID and shows it" context="java"
- * enabled="true" deleted="false">${viewType} ${view} = null; IWorkbenchWindow ${window} =
- * PlatformUI.getWorkbench().getActiveWorkbenchWindow(); if (${window} != null) { IWorkbenchPage
- * ${activePage} = ${window}.getActivePage(); if (${activePage} != null) try { ${view} =
- * (${viewType}) ${activePage}.showView("${viewID}"); } catch (${Exception} e) { // ${todo}: handle
- * exception } } if (${view} != null) { ${cursor} }</template> <template name="signalError"
- * description="Shows an error message in the editors status line" context="java" enabled="true"
- * deleted="false">IEditorActionBarContributor ${contributor} =
- * ${editor}.getEditorSite().getActionBarContributor(); if (${contributor} instanceof
- * EditorActionBarContributor) { IActionBars ${actionBars} = ((EditorActionBarContributor)
- * ${contributor}).getActionBars(); if (${actionBars} != null) { IStatusLineManager ${manager} =
- * ${actionBars}.getStatusLineManager(); if (${manager} != null) ${manager}.setErrorMessage(msg); }
- * }</template> </templates>
- */

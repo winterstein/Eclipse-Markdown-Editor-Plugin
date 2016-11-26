@@ -47,6 +47,8 @@ public class PrefsInit extends AbstractPreferenceInitializer implements Prefs {
 		store.setDefault(PREF_GITHUB_SYNTAX, true);
 		store.setDefault(PREF_MULTIMARKDOWN_METADATA, false);
 
+		store.setDefault(PREF_SPELLING_ENABLED, true);
+
 		PreferenceConverter.setDefault(store, PREF_DEFAULT, DEF_DEFAULT);
 		PreferenceConverter.setDefault(store, PREF_COMMENT, DEF_COMMENT);
 		PreferenceConverter.setDefault(store, PREF_HEADER, DEF_HEADER);
@@ -55,7 +57,7 @@ public class PrefsInit extends AbstractPreferenceInitializer implements Prefs {
 		PreferenceConverter.setDefault(store, PREF_CODE_BG, DEF_CODE_BG);
 	}
 
-	// get bundle cache URL for the default stylesheet
+	// create bundle cache URL for the default stylesheet
 	private String cssDefault() {
 		Bundle bundle = Platform.getBundle(MarkdownUIPlugin.PLUGIN_ID);
 		URL url = FileLocator.find(bundle, new Path("resources/" + DEF_MDCSS), null);

@@ -24,6 +24,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.ITextListener;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -32,7 +35,11 @@ import org.eclipse.swt.browser.ProgressAdapter;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPathEditorInput;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 
@@ -42,6 +49,7 @@ import winterwell.markdown.editors.ActionBarContributor;
 import winterwell.markdown.editors.MarkdownEditor;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.preferences.Prefs;
+import winterwell.markdown.util.PartListener;
 import winterwell.markdown.util.Strings;
 
 public class MarkdownPreview extends ViewPart implements Prefs {
@@ -57,50 +65,99 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 			+ "D=(D.clientHeight)?D:B;return D.scrollTop;}" //$NON-NLS-1$
 			+ "}; return getScrollTop();"; //$NON-NLS-1$
 
-	public static MarkdownPreview preview = null;
-	private Browser viewer = null;
-	private StyleListener styleListener;
+	private static MarkdownPreview view;
+	private Browser browser;
 
-	public class StyleListener implements IPropertyChangeListener {
+	private Limiter limiter;
+
+	private IPartListener partListener = new PartListener() {
+
+		@Override
+		public void partActivated(IWorkbenchPart part) {
+			if (part instanceof MarkdownEditor) {
+				((MarkdownEditor) part).getViewer().addTextListener(textListener);
+				limiter.trigger();
+			} else if (part instanceof MarkdownPreview) {
+				limiter.trigger();
+			}
+		}
+
+		@Override
+		public void partClosed(IWorkbenchPart part) {
+			if (part instanceof MarkdownEditor) {
+				getActivePage().hideView(view);
+			}
+		}
+	};
+
+	private final IPropertyChangeListener styleListener = new IPropertyChangeListener() {
 
 		@Override
 		public void propertyChange(PropertyChangeEvent event) {
 			switch (event.getProperty()) {
 				case PREF_CSS_CUSTOM:
 				case PREF_CSS_DEFAULT:
-					update();
+					limiter.trigger();
 			}
 		}
-	}
+	};
+
+	private ITextListener textListener = new ITextListener() {
+
+		@Override
+		public void textChanged(TextEvent event) {
+			limiter.trigger();
+		}
+	};
 
 	/**
 	 * The constructor.
 	 */
 	public MarkdownPreview() {
-		preview = this;
-		styleListener = new StyleListener();
-		MarkdownUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(styleListener);
+		view = this;
 	}
 
 	/**
-	 * Callback to create and initialize the viewer.
+	 * Callback to create and initialize the browser.
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		viewer = new Browser(parent, SWT.MULTI);
+		browser = new Browser(parent, SWT.MULTI);
+		limiter = new Limiter(view);
+
+		getPreferenceStore().addPropertyChangeListener(styleListener);
+		getActivePage().addPartListener(partListener);
 	}
 
-	public void update() {
-		if (viewer == null) return;
+	@Override
+	public void dispose() {
+		getPreferenceStore().removePropertyChangeListener(styleListener);
+		getActivePage().removePartListener(partListener);
+		ITextViewer srcViewer = getSourceViewer();
+		srcViewer.removeTextListener(textListener);
+
+		if (limiter != null) {
+			limiter.dispose();
+			limiter = null;
+		}
+		browser = null;
+		super.dispose();
+	}
+
+	public synchronized void update() {
+		if (browser == null) return;
 
 		try {
 			IEditorPart editor = ActionBarContributor.getActiveEditor();
 			if (!(editor instanceof MarkdownEditor)) {
-				viewer.setText("");
+				browser.setText("");
 				return;
 			}
 
-			Object result = viewer.evaluate(GETSCROLLTOP);
+			// // object used for wait/notify communications
+			// Boolean load = true;
+
+			Object result = browser.evaluate(GETSCROLLTOP);
 			final int scrollTop = result != null ? ((Number) result).intValue() : 0;
 
 			String html = "";
@@ -108,22 +165,26 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 			MarkdownPage page = ed.getMarkdownPage();
 			if (page != null) {
 				html = page.html();
-				IPath path = getEditorInput(editor);
+				IPath path = getInputPath(editor);
 				html = addHeader(html, getBaseUrl(path), getMdStyles(path));
 
-				viewer.addProgressListener(new ProgressAdapter() {
+				browser.addProgressListener(new ProgressAdapter() {
 
 					@Override
 					public void completed(ProgressEvent event) {
-						viewer.removeProgressListener(this);
-						viewer.execute(String.format("window.scrollTo(0,%d);", scrollTop)); //$NON-NLS-1$
-						viewer.setRedraw(true);
+						browser.removeProgressListener(this);
+						browser.execute(String.format("window.scrollTo(0,%d);", scrollTop)); //$NON-NLS-1$
+						browser.setRedraw(true);
+						// load.notify();
 					}
 				});
 			}
 
-			viewer.setRedraw(false);
-			viewer.setText(html);
+			browser.setRedraw(false);
+			browser.setText(html);
+
+			// wait for the browser load operation to complete
+			// load.wait(getPreferenceStore().getInt(PREF_UPDATE_DELAY) * 1000);
 
 		} catch (Exception e) {
 			StringWriter errors = new StringWriter();
@@ -141,23 +202,27 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 	}
 
 	/**
-	 * Passing the focus request to the viewer's control.
+	 * Passing the focus request to the browser's control.
 	 */
 	@Override
 	public void setFocus() {
-		if (viewer == null) return;
-		viewer.setFocus();
-		update();
+		if (browser != null) browser.setFocus();
 	}
 
-	@Override
-	public void dispose() {
-		MarkdownUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(styleListener);
-		viewer = null;
-		super.dispose();
+	protected IWorkbenchPage getActivePage() {
+		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 	}
 
-	private IPath getEditorInput(IEditorPart editor) {
+	protected ITextViewer getSourceViewer() {
+		MarkdownEditor editor = (MarkdownEditor) ActionBarContributor.getActiveEditor();
+		return editor.getViewer();
+	}
+
+	protected IPreferenceStore getPreferenceStore() {
+		return MarkdownUIPlugin.getDefault().getPreferenceStore();
+	}
+
+	private IPath getInputPath(IEditorPart editor) {
 		IPathEditorInput input = (IPathEditorInput) editor.getEditorInput();
 		return input.getPath();
 	}
