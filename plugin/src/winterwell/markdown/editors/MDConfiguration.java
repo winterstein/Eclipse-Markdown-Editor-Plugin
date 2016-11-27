@@ -6,15 +6,19 @@ import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
+import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
+import org.eclipse.ui.texteditor.spelling.SpellingReconcileStrategy;
+import org.eclipse.ui.texteditor.spelling.SpellingService;
+
+import winterwell.markdown.preferences.Prefs;
 
 public class MDConfiguration extends TextSourceViewerConfiguration {
 
 	private ColorManager colorManager;
-	// private OverlayPreferenceStore spellStore;
-	// private SpellingService spellService;
 
 	public MDConfiguration(ColorManager colorManager, IPreferenceStore store) {
 		super(store);
@@ -33,40 +37,24 @@ public class MDConfiguration extends TextSourceViewerConfiguration {
 
 	@Override
 	public IReconciler getReconciler(ISourceViewer viewer) {
-		// boolean global =
-		// fPreferenceStore.getBoolean(SpellingService.PREFERENCE_SPELLING_ENABLED);
-		// boolean local = fPreferenceStore.getBoolean(Prefs.PREF_SPELLING_ENABLED);
-		// if (local && !global) {
-		// SpellingService service = getSpellingService();
-		// if (service.getActiveSpellingEngineDescriptor(getSpellStore()) == null) {
-		// return super.getReconciler(viewer); // bail
-		// };
-		//
-		// IReconcilingStrategy strategy = new SpellingReconcileStrategy(viewer, service);
-		// MonoReconciler reconciler = new MonoReconciler(strategy, false);
-		// reconciler.setDelay(500);
-		// return reconciler;
-		// }
+		boolean local = fPreferenceStore.getBoolean(Prefs.PREF_SPELLING_ENABLED);
+		if (local) {
+
+			// use the combined preference store
+			SpellingService service = new SpellingService(fPreferenceStore);
+			if (service.getActiveSpellingEngineDescriptor(fPreferenceStore) == null) {
+				return super.getReconciler(viewer); // bail
+			}
+
+			IReconcilingStrategy strategy = new SpellingReconcileStrategy(viewer, service);
+			MonoReconciler reconciler = new MonoReconciler(strategy, false);
+			reconciler.setDelay(500);
+			return reconciler;
+		}
+		
+		// default; uses just the PlatformUI store
 		return super.getReconciler(viewer);
 	}
-
-	// private SpellingService getSpellingService() {
-	// if (spellService == null) {
-	// spellService = new SpellingService(getSpellStore());
-	// }
-	// return spellService;
-	// }
-	//
-	// private IPreferenceStore getSpellStore() {
-	// if (spellStore == null) {
-	// OverlayKey[] keys = new OverlayKey[] {
-	// new OverlayKey(OverlayPreferenceStore.BOOLEAN, SpellingService.PREFERENCE_SPELLING_ENABLED)
-	// };
-	// this.spellStore = new OverlayPreferenceStore(fPreferenceStore, keys);
-	// this.spellStore.setValue(SpellingService.PREFERENCE_SPELLING_ENABLED, true);
-	// }
-	// return spellStore;
-	// }
 
 	@SuppressWarnings("unused")
 	@Override

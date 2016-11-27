@@ -1,4 +1,4 @@
-package winterwell.markdown.preferences;
+package winterwell.markdown.spelling;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -8,8 +8,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 
 /**
  * An overlaying preference store.
- *
- * @since 2.1
  */
 public class OverlayPreferenceStore implements IPreferenceStore {
 
@@ -83,8 +81,8 @@ public class OverlayPreferenceStore implements IPreferenceStore {
 	 * @return the overlay key or <code>null</code> if none can be found
 	 */
 	private OverlayKey findOverlayKey(String key) {
-		for (int i = 0; i < fOverlayKeys.length; i++) {
-			if (fOverlayKeys[i].fKey.equals(key)) return fOverlayKeys[i];
+		for (OverlayKey fOverlayKey : fOverlayKeys) {
+			if (fOverlayKey.fKey.equals(key)) return fOverlayKey;
 		}
 		return null;
 	}
@@ -100,15 +98,15 @@ public class OverlayPreferenceStore implements IPreferenceStore {
 	}
 
 	/**
-	 * Propagates the given overlay key from the orgin to the target preference store.
+	 * Propagates the given overlay key from the origin to the target preference store.
 	 *
-	 * @param orgin the source preference store
+	 * @param origin the source preference store
 	 * @param key the overlay key
 	 * @param target the preference store to which the key is propagated
 	 */
-	private void propagateProperty(IPreferenceStore orgin, OverlayKey key, IPreferenceStore target) {
+	private void propagateProperty(IPreferenceStore origin, OverlayKey key, IPreferenceStore target) {
 
-		if (orgin.isDefault(key.fKey)) {
+		if (origin.isDefault(key.fKey)) {
 			if (!target.isDefault(key.fKey)) target.setToDefault(key.fKey);
 			return;
 		}
@@ -116,37 +114,37 @@ public class OverlayPreferenceStore implements IPreferenceStore {
 		TypeDescriptor d = key.fDescriptor;
 		if (BOOLEAN == d) {
 
-			boolean originValue = orgin.getBoolean(key.fKey);
+			boolean originValue = origin.getBoolean(key.fKey);
 			boolean targetValue = target.getBoolean(key.fKey);
 			if (targetValue != originValue) target.setValue(key.fKey, originValue);
 
 		} else if (DOUBLE == d) {
 
-			double originValue = orgin.getDouble(key.fKey);
+			double originValue = origin.getDouble(key.fKey);
 			double targetValue = target.getDouble(key.fKey);
 			if (targetValue != originValue) target.setValue(key.fKey, originValue);
 
 		} else if (FLOAT == d) {
 
-			float originValue = orgin.getFloat(key.fKey);
+			float originValue = origin.getFloat(key.fKey);
 			float targetValue = target.getFloat(key.fKey);
 			if (targetValue != originValue) target.setValue(key.fKey, originValue);
 
 		} else if (INT == d) {
 
-			int originValue = orgin.getInt(key.fKey);
+			int originValue = origin.getInt(key.fKey);
 			int targetValue = target.getInt(key.fKey);
 			if (targetValue != originValue) target.setValue(key.fKey, originValue);
 
 		} else if (LONG == d) {
 
-			long originValue = orgin.getLong(key.fKey);
+			long originValue = origin.getLong(key.fKey);
 			long targetValue = target.getLong(key.fKey);
 			if (targetValue != originValue) target.setValue(key.fKey, originValue);
 
 		} else if (STRING == d) {
 
-			String originValue = orgin.getString(key.fKey);
+			String originValue = origin.getString(key.fKey);
 			String targetValue = target.getString(key.fKey);
 			if (targetValue != null && originValue != null && !targetValue.equals(originValue))
 				target.setValue(key.fKey, originValue);
@@ -158,57 +156,57 @@ public class OverlayPreferenceStore implements IPreferenceStore {
 	 * Propagates all overlay keys from this store to the parent store.
 	 */
 	public void propagate() {
-		for (int i = 0; i < fOverlayKeys.length; i++)
-			propagateProperty(fStore, fOverlayKeys[i], fParent);
+		for (OverlayKey fOverlayKey : fOverlayKeys)
+			propagateProperty(fStore, fOverlayKey, fParent);
 	}
 
 	/**
-	 * Loads the given key from the orgin into the target.
+	 * Loads the given key from the origin into the target.
 	 *
-	 * @param orgin the source preference store
+	 * @param origin the source preference store
 	 * @param key the overlay key
 	 * @param target the preference store to which the key is propagated
 	 * @param forceInitialization if <code>true</code> the value in the target gets initialized
 	 *            before loading
 	 */
-	private void loadProperty(IPreferenceStore orgin, OverlayKey key, IPreferenceStore target,
+	private void loadProperty(IPreferenceStore origin, OverlayKey key, IPreferenceStore target,
 			boolean forceInitialization) {
 		TypeDescriptor d = key.fDescriptor;
 		if (BOOLEAN == d) {
 
 			if (forceInitialization) target.setValue(key.fKey, true);
-			target.setValue(key.fKey, orgin.getBoolean(key.fKey));
-			target.setDefault(key.fKey, orgin.getDefaultBoolean(key.fKey));
+			target.setValue(key.fKey, origin.getBoolean(key.fKey));
+			target.setDefault(key.fKey, origin.getDefaultBoolean(key.fKey));
 
 		} else if (DOUBLE == d) {
 
 			if (forceInitialization) target.setValue(key.fKey, 1.0D);
-			target.setValue(key.fKey, orgin.getDouble(key.fKey));
-			target.setDefault(key.fKey, orgin.getDefaultDouble(key.fKey));
+			target.setValue(key.fKey, origin.getDouble(key.fKey));
+			target.setDefault(key.fKey, origin.getDefaultDouble(key.fKey));
 
 		} else if (FLOAT == d) {
 
 			if (forceInitialization) target.setValue(key.fKey, 1.0F);
-			target.setValue(key.fKey, orgin.getFloat(key.fKey));
-			target.setDefault(key.fKey, orgin.getDefaultFloat(key.fKey));
+			target.setValue(key.fKey, origin.getFloat(key.fKey));
+			target.setDefault(key.fKey, origin.getDefaultFloat(key.fKey));
 
 		} else if (INT == d) {
 
 			if (forceInitialization) target.setValue(key.fKey, 1);
-			target.setValue(key.fKey, orgin.getInt(key.fKey));
-			target.setDefault(key.fKey, orgin.getDefaultInt(key.fKey));
+			target.setValue(key.fKey, origin.getInt(key.fKey));
+			target.setDefault(key.fKey, origin.getDefaultInt(key.fKey));
 
 		} else if (LONG == d) {
 
 			if (forceInitialization) target.setValue(key.fKey, 1L);
-			target.setValue(key.fKey, orgin.getLong(key.fKey));
-			target.setDefault(key.fKey, orgin.getDefaultLong(key.fKey));
+			target.setValue(key.fKey, origin.getLong(key.fKey));
+			target.setDefault(key.fKey, origin.getDefaultLong(key.fKey));
 
 		} else if (STRING == d) {
 
 			if (forceInitialization) target.setValue(key.fKey, "1"); //$NON-NLS-1$
-			target.setValue(key.fKey, orgin.getString(key.fKey));
-			target.setDefault(key.fKey, orgin.getDefaultString(key.fKey));
+			target.setValue(key.fKey, origin.getString(key.fKey));
+			target.setDefault(key.fKey, origin.getDefaultString(key.fKey));
 
 		}
 	}
@@ -217,8 +215,8 @@ public class OverlayPreferenceStore implements IPreferenceStore {
 	 * Loads the values from the parent into this store.
 	 */
 	public void load() {
-		for (int i = 0; i < fOverlayKeys.length; i++)
-			loadProperty(fParent, fOverlayKeys[i], fStore, true);
+		for (OverlayKey fOverlayKey : fOverlayKeys)
+			loadProperty(fParent, fOverlayKey, fStore, true);
 
 		fLoaded = true;
 	}
@@ -227,8 +225,8 @@ public class OverlayPreferenceStore implements IPreferenceStore {
 	 * Loads the default values.
 	 */
 	public void loadDefaults() {
-		for (int i = 0; i < fOverlayKeys.length; i++)
-			setToDefault(fOverlayKeys[i].fKey);
+		for (OverlayKey fOverlayKey : fOverlayKeys)
+			setToDefault(fOverlayKey.fKey);
 	}
 
 	/**

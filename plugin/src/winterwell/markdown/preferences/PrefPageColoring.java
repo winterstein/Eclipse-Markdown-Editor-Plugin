@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import winterwell.markdown.MarkdownUIPlugin;
+import winterwell.markdown.MarkdownUI;
 
 public class PrefPageColoring extends FieldEditorPreferencePage implements IWorkbenchPreferencePage, Prefs {
 
@@ -20,7 +20,7 @@ public class PrefPageColoring extends FieldEditorPreferencePage implements IWork
 	}
 
 	public void init(IWorkbench workbench) {
-		setPreferenceStore(MarkdownUIPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(MarkdownUI.getDefault().getPreferenceStore());
 	}
 
 	/** Creates the field editors. */

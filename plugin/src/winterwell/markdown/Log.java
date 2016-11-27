@@ -11,6 +11,10 @@ import org.eclipse.core.runtime.Status;
  */
 public class Log {
 
+	public static IStatus createStatus(int severity, int code, String message, Throwable exception) {
+		return new Status(severity, MarkdownUI.PLUGIN_ID, code, message, exception);
+	}
+
 	public static void info(String message) {
 		log(IStatus.INFO, IStatus.OK, message, null);
 	}
@@ -27,16 +31,16 @@ public class Log {
 		log(IStatus.ERROR, IStatus.ERROR, message, exception);
 	}
 
+	public static void error(int code, String message, Throwable exception) {
+		log(createStatus(IStatus.ERROR, code, message, exception));
+	}
+
 	public static void log(int severity, int code, String message, Throwable exception) {
 		log(createStatus(severity, code, message, exception));
 	}
 
-	public static IStatus createStatus(int severity, int code, String message, Throwable exception) {
-		return new Status(severity, MarkdownUIPlugin.PLUGIN_ID, code, message, exception);
-	}
-
 	public static void log(IStatus status) {
-		ILog log = MarkdownUIPlugin.getDefault().getLog();
+		ILog log = MarkdownUI.getDefault().getLog();
 		log.log(status);
 	}
 }

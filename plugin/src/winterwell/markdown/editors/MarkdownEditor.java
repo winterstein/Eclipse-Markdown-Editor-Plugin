@@ -15,7 +15,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -34,19 +33,15 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPathEditorInput;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import winterwell.markdown.Log;
-import winterwell.markdown.MarkdownUIPlugin;
+import winterwell.markdown.MarkdownUI;
 import winterwell.markdown.pagemodel.MarkdownPage;
 import winterwell.markdown.pagemodel.MarkdownPage.Header;
-import winterwell.markdown.preferences.EclipsePreferencesAdapter;
 import winterwell.markdown.preferences.PrefPageGeneral;
 import winterwell.markdown.preferences.Prefs;
 
@@ -97,7 +92,7 @@ public class MarkdownEditor extends TextEditor {
 
 	public MarkdownEditor() {
 		super();
-		initPreferenceStore();
+		initCombinedPreferenceStore();
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new MDConfiguration(colorManager, getPreferenceStore()));
 	}
@@ -146,6 +141,7 @@ public class MarkdownEditor extends TextEditor {
 	public void dispose() {
 		removePreferenceStoreListener();
 		colorManager.dispose();
+		colorManager = null;
 		super.dispose();
 	}
 
@@ -166,15 +162,11 @@ public class MarkdownEditor extends TextEditor {
 	}
 
 	/**
-	 * Initializes the preference store for this editor.
+	 * Initializes the preference store for this editor. The constucted store represents the
+	 * combined values of the MarkdownUI, EditorsUI, and PlatformUI stores.
 	 */
-	private void initPreferenceStore() {
-		List<IPreferenceStore> stores = new ArrayList<>(3);
-		stores.add(new EclipsePreferencesAdapter(InstanceScope.INSTANCE, MarkdownUIPlugin.PLUGIN_ID));
-		stores.add(EditorsUI.getPreferenceStore());
-		stores.add(PlatformUI.getPreferenceStore());
-
-		ChainedPreferenceStore store = new ChainedPreferenceStore(stores.toArray(new IPreferenceStore[stores.size()]));
+	private void initCombinedPreferenceStore() {
+		IPreferenceStore store = MarkdownUI.getDefault().getCombinedPreferenceStore();
 		store.addPropertyChangeListener(prefChangeListener);
 		setPreferenceStore(store);
 	}
@@ -216,7 +208,7 @@ public class MarkdownEditor extends TextEditor {
 	}
 
 	/**
-	 * @return The text of the editor's current document, or null if unavailable.
+	 * Gets the text of the editor's current document, or null if unavailable.
 	 */
 	public String getText() {
 		IDocument doc = getDocument();

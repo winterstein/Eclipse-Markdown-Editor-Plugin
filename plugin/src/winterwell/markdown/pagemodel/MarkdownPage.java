@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 
-import winterwell.markdown.MarkdownUIPlugin;
+import winterwell.markdown.MarkdownUI;
 import winterwell.markdown.StringMethods;
 import winterwell.markdown.preferences.PrefPageGeneral;
 import winterwell.markdown.util.Strings;
@@ -220,7 +220,7 @@ public class MarkdownPage {
 	 * @param text
 	 */
 	public MarkdownPage(String text) {
-		pStore = MarkdownUIPlugin.getDefault().getPreferenceStore();
+		pStore = MarkdownUI.getDefault().getPreferenceStore();
 		setText(text);
 	}
 

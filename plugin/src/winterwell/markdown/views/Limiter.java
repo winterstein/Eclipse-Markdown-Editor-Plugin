@@ -4,7 +4,7 @@ import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-import winterwell.markdown.MarkdownUIPlugin;
+import winterwell.markdown.MarkdownUI;
 import winterwell.markdown.preferences.Prefs;
 
 /**
@@ -34,7 +34,7 @@ public class Limiter extends Thread {
 		super("Limiter");
 		this.view = view;
 		this.display = PlatformUI.getWorkbench().getDisplay();
-		this.delay = MarkdownUIPlugin.getDefault().getPreferenceStore().getInt(Prefs.PREF_UPDATE_DELAY) * 1000;
+		this.delay = MarkdownUI.getDefault().getPreferenceStore().getInt(Prefs.PREF_UPDATE_DELAY) * 1000;
 	}
 
 	public void dispose() {

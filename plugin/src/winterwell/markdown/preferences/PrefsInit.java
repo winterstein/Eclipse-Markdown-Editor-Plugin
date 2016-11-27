@@ -11,9 +11,10 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.ui.texteditor.spelling.SpellingService;
 import org.osgi.framework.Bundle;
 
-import winterwell.markdown.MarkdownUIPlugin;
+import winterwell.markdown.MarkdownUI;
 
 /**
  * Initialize default preference values
@@ -28,7 +29,7 @@ public class PrefsInit extends AbstractPreferenceInitializer implements Prefs {
 	private static final RGB DEF_CODE_BG = new RGB(244, 244, 244);
 
 	public void initializeDefaultPreferences() {
-		IPreferenceStore store = MarkdownUIPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = MarkdownUI.getDefault().getPreferenceStore();
 
 		store.setDefault(PREF_WORD_WRAP, false);
 		store.setDefault(PREF_FOLDING, true);
@@ -47,6 +48,8 @@ public class PrefsInit extends AbstractPreferenceInitializer implements Prefs {
 		store.setDefault(PREF_GITHUB_SYNTAX, true);
 		store.setDefault(PREF_MULTIMARKDOWN_METADATA, false);
 
+		// hides the corresponding PlatformUI preference value
+		store.setDefault(SpellingService.PREFERENCE_SPELLING_ENABLED, true);
 		store.setDefault(PREF_SPELLING_ENABLED, true);
 
 		PreferenceConverter.setDefault(store, PREF_DEFAULT, DEF_DEFAULT);
@@ -59,7 +62,7 @@ public class PrefsInit extends AbstractPreferenceInitializer implements Prefs {
 
 	// create bundle cache URL for the default stylesheet
 	private String cssDefault() {
-		Bundle bundle = Platform.getBundle(MarkdownUIPlugin.PLUGIN_ID);
+		Bundle bundle = Platform.getBundle(MarkdownUI.PLUGIN_ID);
 		URL url = FileLocator.find(bundle, new Path("resources/" + DEF_MDCSS), null);
 		try {
 			url = FileLocator.toFileURL(url);

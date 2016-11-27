@@ -23,6 +23,12 @@
             id="winterwell.markdown.preferences.PrefPageHighlight"
             name="Syntax Coloring">
       </page>
+      <page
+            category="winterwell.markdown.preferences.PrefPageGeneral"
+            class="winterwell.markdown.preferences.PrefPageSpeller"
+            id="winterwell.markdown.preferences.PrefPageSpeller"
+            name="Spelling">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

@@ -44,7 +44,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 
 import winterwell.markdown.Log;
-import winterwell.markdown.MarkdownUIPlugin;
+import winterwell.markdown.MarkdownUI;
 import winterwell.markdown.editors.ActionBarContributor;
 import winterwell.markdown.editors.MarkdownEditor;
 import winterwell.markdown.pagemodel.MarkdownPage;
@@ -193,9 +193,9 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 
 			List<Status> lines = new ArrayList<>();
 			for (StackTraceElement line : e.getStackTrace()) {
-				lines.add(new Status(IStatus.ERROR, MarkdownUIPlugin.PLUGIN_ID, line.toString()));
+				lines.add(new Status(IStatus.ERROR, MarkdownUI.PLUGIN_ID, line.toString()));
 			}
-			MultiStatus status = new MultiStatus(MarkdownUIPlugin.PLUGIN_ID, IStatus.ERROR,
+			MultiStatus status = new MultiStatus(MarkdownUI.PLUGIN_ID, IStatus.ERROR,
 					lines.toArray(new Status[lines.size()]), e.getLocalizedMessage(), e);
 			ErrorDialog.openError(null, "Viewer error", e.getMessage(), status);
 		}
@@ -219,7 +219,7 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
-		return MarkdownUIPlugin.getDefault().getPreferenceStore();
+		return MarkdownUI.getDefault().getPreferenceStore();
 	}
 
 	private IPath getInputPath(IEditorPart editor) {
@@ -244,7 +244,7 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 		if (pathname != null) return pathname;
 
 		// 3) read the file identified by the pref key 'PREF_CSS_CUSTOM' from the filesystem
-		IPreferenceStore store = MarkdownUIPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = MarkdownUI.getDefault().getPreferenceStore();
 		String customCss = store.getString(PREF_CSS_CUSTOM);
 		if (!customCss.isEmpty()) {
 			File file = new File(customCss);
@@ -266,7 +266,7 @@ public class MarkdownPreview extends ViewPart implements Prefs {
 		}
 
 		// 5) read 'markdown.css' from the bundle
-		Bundle bundle = Platform.getBundle(MarkdownUIPlugin.PLUGIN_ID);
+		Bundle bundle = Platform.getBundle(MarkdownUI.PLUGIN_ID);
 		URL url = FileLocator.find(bundle, new Path("resources/" + DEF_MDCSS), null);
 		try {
 			url = FileLocator.toFileURL(url);
