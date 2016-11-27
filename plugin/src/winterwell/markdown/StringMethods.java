@@ -9,10 +9,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import winterwell.utils.Mutable;
-import winterwell.utils.containers.Pair;
+import winterwell.markdown.util.Mutable;
+import winterwell.markdown.util.Pair;
 
 /**
  * A collection of general-purpose String handling methods.
@@ -39,11 +38,9 @@ public final class StringMethods {
 			char c = page.charAt(i);
 			// First check whether we are ignoring text
 			if (inTag) {
-				if (c == '>')
-					inTag = false;
+				if (c == '>') inTag = false;
 			} else if (inComment) {
-				if (c == '>' && page.charAt(i - 1) == '-'
-						&& page.charAt(i - 1) == '-') {
+				if (c == '>' && page.charAt(i - 1) == '-' && page.charAt(i - 1) == '-') {
 					inComment = false;
 				}
 			} else if (inScript) {
@@ -55,11 +52,9 @@ public final class StringMethods {
 				// non-whitespace character
 				if (c == '<' && !Character.isWhitespace(page.charAt(i + 1))) {
 					// Comment, script-block or tag?
-					if (page.charAt(i + 1) == '!' && page.charAt(i + 2) == '-'
-							&& page.charAt(i + 3) == '-') {
+					if (page.charAt(i + 1) == '!' && page.charAt(i + 2) == '-' && page.charAt(i + 3) == '-') {
 						inComment = true;
-					} else if (i + 8 < page.length()
-							&& page.substring(i + 1, i + 7).equals("script")) {
+					} else if (i + 8 < page.length() && page.substring(i + 1, i + 7).equals("script")) {
 						inScript = true;
 						i += 7;
 					} else
@@ -72,7 +67,7 @@ public final class StringMethods {
 		}
 		return stripped.toString();
 	}
-	
+
 	/**
 	 * The local line-end string. \n on unix, \r\n on windows, \r on mac.
 	 */
@@ -80,8 +75,7 @@ public final class StringMethods {
 
 	/**
 	 * @param s
-	 * @return A version of s where the first letter is uppercase and all others
-	 *         are lowercase
+	 * @return A version of s where the first letter is uppercase and all others are lowercase
 	 */
 	public static final String capitalise(final String s) {
 		return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
@@ -121,30 +115,24 @@ public final class StringMethods {
 	}
 
 	/**
-	 * 
-	 * E.g.
-	 * <code>findEnclosingRegion("text with a [region] inside", 15, '[', ']')</code>
-	 * is (??,??)
+	 * E.g. <code>findEnclosingRegion("text with a [region] inside", 15, '[', ']')</code> is (??,??)
 	 * 
 	 * @param text
 	 * @param offset
 	 * @param start
 	 * @param end
-	 * @return the smallest enclosed region (including start and end chars, the
-	 *         1st number is inclusive, the 2nd exclusive), or null if none. So
-	 *         text.subString(start,end) is the specified region
+	 * @return the smallest enclosed region (including start and end chars, the 1st number is
+	 *         inclusive, the 2nd exclusive), or null if none. So text.subString(start,end) is the
+	 *         specified region
 	 */
-	public static Pair<Integer> findEnclosingRegion(String text, int offset,
-			char startMarker, char endMarker) {
+	public static Pair<Integer> findEnclosingRegion(String text, int offset, char startMarker, char endMarker) {
 		// Forward
 		int end = findEnclosingRegion2(text, offset, endMarker, 1);
-		if (end == -1)
-			return null;
+		if (end == -1) return null;
 		end++; // end is exclusive
 		// Backward
 		int start = findEnclosingRegion2(text, offset, startMarker, -1);
-		if (start == -1)
-			return null;
+		if (start == -1) return null;
 		// Sanity
 		assert text.substring(start, end).charAt(0) == startMarker;
 		assert text.substring(start, end).endsWith("" + endMarker);
@@ -152,20 +140,17 @@ public final class StringMethods {
 		return new Pair<Integer>(start, end);
 	}
 
-	private static int findEnclosingRegion2(String text, int offset,
-			char endMarker, int direction) {
+	private static int findEnclosingRegion2(String text, int offset, char endMarker, int direction) {
 		while (offset > -1 && offset < text.length()) {
 			char c = text.charAt(offset);
-			if (c == endMarker)
-				return offset;
+			if (c == endMarker) return offset;
 			offset += direction;
 		}
 		return -1;
 	}
 
 	/**
-	 * A convenience wrapper for
-	 * {@link #findEnclosingRegion(String, int, char, char)} E.g. <code>
+	 * A convenience wrapper for {@link #findEnclosingRegion(String, int, char, char)} E.g. <code>
 	 findEnclosingRegion("text with a [region] inside", 15, '[', ']') .equals("[region]");
 	 </code>
 	 * 
@@ -173,55 +158,43 @@ public final class StringMethods {
 	 * @param offset
 	 * @param start
 	 * @param end
-	 * @return the smallest enclosed region (including start and end chars), or
-	 *         null if none.
+	 * @return the smallest enclosed region (including start and end chars), or null if none.
 	 */
-	public static String findEnclosingText(String text, int offset,
-			char startMarker, char endMarker) {
-		Pair<Integer> region = findEnclosingRegion(text, offset, startMarker,
-				endMarker);
-		if (region == null)
-			return null;
+	public static String findEnclosingText(String text, int offset, char startMarker, char endMarker) {
+		Pair<Integer> region = findEnclosingRegion(text, offset, startMarker, endMarker);
+		if (region == null) return null;
 		String s = text.substring(region.first, region.second);
 		return s;
 	}
 
 	/**
-	 * Format a block of text to use the given line-width. I.e. adjust the line
-	 * breaks. Also known as <i>hard</i> line-wrapping. Paragraphs are
-	 * recognised by a line of blank space between them (e.g. two returns).
+	 * Format a block of text to use the given line-width. I.e. adjust the line breaks. Also known
+	 * as <i>hard</i> line-wrapping. Paragraphs are recognised by a line of blank space between them
+	 * (e.g. two returns).
 	 * <p>
-	 * Note: a side-effect of this method is that it converts all line-breaks
-	 * into the local system's line-breaks. E.g. on Windows, \n will become \r\n
+	 * Note: a side-effect of this method is that it converts all line-breaks into the local
+	 * system's line-breaks. E.g. on Windows, \n will become \r\n
 	 * 
-	 * @param text
-	 *            The text to format
-	 * @param lineWidth
-	 *            The number of columns in a line. Typically 78 or 80.
-	 * @param respectLeadingCharacters
-	 *            Can be null. If set, the specified leading characters will be
-	 *            copied if the line is split. Use with " \t" to keep indented
-	 *            paragraphs properly indented. Use with "> \t" to also handle
-	 *            email-style quoting. Note that respected leading characters
-	 *            receive no special treatment when they are used inside a
+	 * @param text The text to format
+	 * @param lineWidth The number of columns in a line. Typically 78 or 80.
+	 * @param respectLeadingCharacters Can be null. If set, the specified leading characters will be
+	 *            copied if the line is split. Use with " \t" to keep indented paragraphs properly
+	 *            indented. Use with "> \t" to also handle email-style quoting. Note that respected
+	 *            leading characters receive no special treatment when they are used inside a
 	 *            paragraph.
 	 * @return A copy of text, formatted to the given line-width.
 	 *         <p>
-	 *         TODO: recognise paragraphs by changes in the respected leading
-	 *         characters
+	 *         TODO: recognise paragraphs by changes in the respected leading characters
 	 */
-	public static String format(String text, int lineWidth, int tabWidth,
-			String respectLeadingCharacters) {
+	public static String format(String text, int lineWidth, int tabWidth, String respectLeadingCharacters) {
 		// Switch to Linux line breaks for easier internal workings
 		text = convertLineBreaks(text, "\n");
 		// Find paragraphs
-		List<String> paras = format2_splitParagraphs(text,
-				respectLeadingCharacters);
+		List<String> paras = format2_splitParagraphs(text, respectLeadingCharacters);
 		// Rebuild text
 		StringBuilder sb = new StringBuilder(text.length() + 10);
 		for (String p : paras) {
-			String fp = format3_oneParagraph(p, lineWidth, tabWidth,
-					respectLeadingCharacters);
+			String fp = format3_oneParagraph(p, lineWidth, tabWidth, respectLeadingCharacters);
 			sb.append(fp);
 			// Paragraphs end with a double line break
 			sb.append("\n\n");
@@ -234,12 +207,11 @@ public final class StringMethods {
 		return text;
 	}
 
-	private static List<String> format2_splitParagraphs(String text,
-			String respectLeadingCharacters) {
+	private static List<String> format2_splitParagraphs(String text, String respectLeadingCharacters) {
 		List<String> paras = new ArrayList<String>();
 		Mutable.Int index = new Mutable.Int(0);
 		// TODO The characters prefacing this paragraph
-		String leadingChars = "";
+		// String leadingChars = "";
 		while (index.value < text.length()) {
 			// One paragraph
 			boolean inSpace = false;
@@ -260,8 +232,7 @@ public final class StringMethods {
 					// the 2nd line break char
 					// }
 					// Double line end - indicating a paragraph break
-					if (inSpace)
-						break;
+					if (inSpace) break;
 					inSpace = true;
 				}
 				// TODO Other paragraph markers, spotted by a change in
@@ -283,15 +254,13 @@ public final class StringMethods {
 	 * @param respectLeadingCharacters
 	 * @return
 	 */
-	private static String format3_oneParagraph(String p, int lineWidth,
-			int tabWidth, String respectLeadingCharacters) {
+	private static String format3_oneParagraph(String p, int lineWidth, int tabWidth, String respectLeadingCharacters) {
 		// Collect the reformatted paragraph
 		StringBuilder sb = new StringBuilder(p.length() + 10); // Allow for
-																// some extra
-																// line-breaks
+																 // some extra
+																 // line-breaks
 		// Get respected leading chars
-		String leadingChars = format4_getLeadingChars(p,
-				respectLeadingCharacters);
+		String leadingChars = format4_getLeadingChars(p, respectLeadingCharacters);
 		// First Line
 		sb.append(leadingChars);
 		int lineLength = leadingChars.length();
@@ -304,8 +273,7 @@ public final class StringMethods {
 			index++;
 			while (!Character.isWhitespace(c)) {
 				word.append(c);
-				if (index == p.length())
-					break;
+				if (index == p.length()) break;
 				c = p.charAt(index);
 				index++;
 			}
@@ -336,17 +304,13 @@ public final class StringMethods {
 	}
 
 	/**
-	 * 
 	 * @param text
-	 * @param respectLeadingCharacters
-	 *            Can be null
-	 * @return The characters at the beginning of text which are respected. E.g.
-	 *         ("> Hello", " \t>") --> "> "
+	 * @param respectLeadingCharacters Can be null
+	 * @return The characters at the beginning of text which are respected. E.g. ("> Hello", " \t>")
+	 *         --> "> "
 	 */
-	private static String format4_getLeadingChars(String text,
-			String respectLeadingCharacters) {
-		if (respectLeadingCharacters == null)
-			return "";
+	private static String format4_getLeadingChars(String text, String respectLeadingCharacters) {
+		if (respectLeadingCharacters == null) return "";
 		// Line-breaks cannot be respected
 		assert respectLeadingCharacters.indexOf('\n') == -1;
 		// Look for the first non-respected char
@@ -383,8 +347,8 @@ public final class StringMethods {
 	}
 
 	/**
-	 * Ensure that line ends with the right line-end character(s). This is more
-	 * efficient than the version for Strings.
+	 * Ensure that line ends with the right line-end character(s). This is more efficient than the
+	 * version for Strings.
 	 * 
 	 * @param line
 	 */
@@ -412,12 +376,10 @@ public final class StringMethods {
 		return;
 	}
 
-
-	
 	/**
 	 * @param string
-	 * @return the MD5 sum of the string using the default charset. Null if
-	 *         there was an error in calculating the hash.
+	 * @return the MD5 sum of the string using the default charset. Null if there was an error in
+	 *         calculating the hash.
 	 * @author Sam Halliday
 	 */
 	public static String md5Hash(String string) {
@@ -435,8 +397,7 @@ public final class StringMethods {
 	/**
 	 * Removes HTML-style tags from a string.
 	 * 
-	 * @param s
-	 *            a String from which to remove tags
+	 * @param s a String from which to remove tags
 	 * @return a string with all instances of <.*> removed.
 	 */
 	public static String removeTags(String s) {
@@ -444,12 +405,9 @@ public final class StringMethods {
 		boolean inTag = false;
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
-			if (c == '<')
-				inTag = true;
-			if (!inTag)
-				sb.append(c);
-			if (c == '>')
-				inTag = false;
+			if (c == '<') inTag = true;
+			if (!inTag) sb.append(c);
+			if (c == '>') inTag = false;
 		}
 		return sb.toString();
 	}
@@ -470,8 +428,7 @@ public final class StringMethods {
 	}
 
 	/**
-	 * Split a piece of text into separate lines. The line breaks are left at
-	 * the end of each line.
+	 * Split a piece of text into separate lines. The line breaks are left at the end of each line.
 	 * 
 	 * @param text
 	 * @return The individual lines in the text.
@@ -486,8 +443,7 @@ public final class StringMethods {
 				// Handle MS Windows 2 character \r\n line breaks
 				if (i + 1 < text.length()) {
 					char c2 = text.charAt(i + 1);
-					if (c == '\r' && c2 == '\n')
-						i++;
+					if (c == '\r' && c2 == '\n') i++;
 				}
 				// Get the line, with the line break
 				String line = text.substring(start, i + 1);
@@ -504,8 +460,8 @@ public final class StringMethods {
 	}
 
 	/**
-	 * Remove <i>trailing</i> whitespace. c.f. String#trim() which removes
-	 * leading and trailing whitespace.
+	 * Remove <i>trailing</i> whitespace. c.f. String#trim() which removes leading and trailing
+	 * whitespace.
 	 * 
 	 * @param sb
 	 */
@@ -513,11 +469,9 @@ public final class StringMethods {
 		while (true) {
 			// Get the last character
 			int i = sb.length() - 1;
-			if (i == -1)
-				return; // Quit if sb is empty
+			if (i == -1) return; // Quit if sb is empty
 			char c = sb.charAt(i);
-			if (!Character.isWhitespace(c))
-				return; // Finish?
+			if (!Character.isWhitespace(c)) return; // Finish?
 			sb.deleteCharAt(i); // Remove and continue
 		}
 	}
@@ -542,8 +496,7 @@ public final class StringMethods {
 
 	/**
 	 * @param text
-	 * @return the number of words in text. Uses a crude whitespace
-	 * measure.
+	 * @return the number of words in text. Uses a crude whitespace measure.
 	 */
 	public static int wordCount(String text) {
 		String[] bits = text.split("\\W+");

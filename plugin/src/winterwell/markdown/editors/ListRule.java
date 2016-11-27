@@ -5,10 +5,6 @@
  */
 package winterwell.markdown.editors;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.rules.ICharacterScanner;
 import org.eclipse.jface.text.rules.IRule;
@@ -16,19 +12,17 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
 /**
- * 
- *
  * @author Daniel Winterstein
  */
 public class ListRule implements IRule {
-	private ArrayList<Integer> markerList;
+
+	// private ArrayList<Integer> markerList;
 	protected IToken fToken;
-		
-	public ListRule(IToken token) {	
+
+	public ListRule(IToken token) {
 		Assert.isNotNull(token);
-		fToken= token;
+		fToken = token;
 	}
-	
 
 	/*
 	 * @see IRule#evaluate(ICharacterScanner)
@@ -38,29 +32,28 @@ public class ListRule implements IRule {
 		if (scanner.getColumn() != 0) {
 			return Token.UNDEFINED;
 		}
-//		// Fast mode
-//		if (scanner.read() != '-') {
-//			scanner.unread();
-//			return Token.UNDEFINED;
-//		}
-//		if (Character.isWhitespace(scanner.read())) {
-//			return fToken;
-//		}
-//		scanner.unread();
-//		scanner.unread();
-//		return Token.UNDEFINED;
-//		// Fast mode
+		// // Fast mode
+		// if (scanner.read() != '-') {
+		// scanner.unread();
+		// return Token.UNDEFINED;
+		// }
+		// if (Character.isWhitespace(scanner.read())) {
+		// return fToken;
+		// }
+		// scanner.unread();
+		// scanner.unread();
+		// return Token.UNDEFINED;
+		// // Fast mode
 		int readCount = 0;
 		int c;
 		while ((c = scanner.read()) != ICharacterScanner.EOF) {
 			readCount++;
-			if( !Character.isWhitespace( c ) ) {
+			if (!Character.isWhitespace(c)) {
 				int after = scanner.read();
-//				readCount++;
+				// readCount++;
 				scanner.unread();
-//				if ( markerList.contains(c) && Character.isWhitespace( after ) ) {
-				if ( (c == '-' || c == '+' || c == '*') 
-						&& Character.isWhitespace( after ) ) {
+				// if ( markerList.contains(c) && Character.isWhitespace( after ) ) {
+				if ((c == '-' || c == '+' || c == '*') && Character.isWhitespace(after)) {
 					return fToken;
 				} else {
 					for (; readCount > 0; readCount--)

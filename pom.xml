@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.winterwell.markdown</groupId>
 	<artifactId>markdown.editor.parent</artifactId>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Markdown Editor (parent)</name>
+
+	<name>Markdown Editor parent</name>
+	<description>com.winterwell.markdown parent</description>
 
 	<organization>
 		<name>Winterwell Associates Ltd</name>
@@ -34,48 +37,38 @@
 			<organizationUrl>http://www.nodeclipse.org/</organizationUrl>
 			<timezone>+8</timezone>
 		</contributor>
+		<contributor>
+			<name>Gerald Rosenberg</name>
+			<organization>Certiv Analytics</organization>
+			<organizationUrl>http://www.certiv.net/</organizationUrl>
+			<timezone>-8</timezone>
+		</contributor>
 	</contributors>
 
 	<prerequisites>
-		<maven>3.0</maven>
+		<maven>3.3.3</maven>
 	</prerequisites>
 
 	<properties>
-		<tycho-version>0.18.1</tycho-version>
-
-		<!-- PROJECT SETTINGS -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-		<!-- PLUGIN VERSIONS 
-		<version.tycho>0.18.1</version.tycho>
-		<version.compiler>2.5.1</version.compiler>
-		<version.resources>2.5</version.resources>
-		-->
+		<tycho.version>0.24.0</tycho.version>
+		<tycho-extras.version>0.24.0</tycho-extras.version>
+		<java.version>1.8</java.version>
 	</properties>
 
-
 	<modules>
-		<module>plugin</module>
 		<module>feature</module>
+		<module>plugin</module>
 		<module>site</module>
 	</modules>
 
 	<repositories>
-		<!-- ECLIPSE 3.7 
 		<repository>
-			<id>eclipse-indigo</id>
+			<id>neon</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/indigo</url>
+			<url>http://download.eclipse.org/releases/neon</url>
 		</repository>
-		-->
-		<!-- -->
-		<repository>
-			<id>kepler</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/kepler</url>
-		</repository>
-		 
 	</repositories>
 
 	<build>
@@ -83,52 +76,19 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
-				<version>${tycho-version}</version>
+				<version>${tycho.version}</version>
 				<extensions>true</extensions>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-compiler-plugin</artifactId>
-				<version>${tycho-version}</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-
-			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${version.compiler}</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>${version.resources}</version>
 				<configuration>
 					<encoding>UTF-8</encoding>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-maven-plugin</artifactId>
-				<version>${version.tycho}</version>
-				<extensions>true</extensions>
-			</plugin>
-			  -->
-			<!--  -->
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho-version}</version>
+				<version>${tycho.version}</version>
 				<configuration>
 					<environments>
 						<environment>
@@ -159,9 +119,22 @@
 					</environments>
 				</configuration>
 			</plugin>
-			
-		</plugins>
-	</build>
 
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-packaging-plugin</artifactId>
+					<version>${tycho.version}</version>
+					<configuration>
+						<format>yyyyMMdd-HHmm</format>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+	</build>
 
 </project>
