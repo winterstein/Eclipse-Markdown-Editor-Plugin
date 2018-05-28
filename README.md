@@ -19,6 +19,9 @@ or install with [Nodeclipse CLI Installer](https://github.com/Nodeclipse/nodecli
 There is also a complementary GitHub Flavoured Markdown Viewer
 <https://github.com/satyagraha/gfm_viewer>
 
+For dedicated AsciiDoc (`.adoc`) support, see 
+<https://github.com/de-jcup/eclipse-asciidoctor-editor>
+
 
 ## Usage
 
