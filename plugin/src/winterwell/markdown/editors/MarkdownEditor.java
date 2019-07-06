@@ -20,7 +20,9 @@ import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -32,6 +34,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
@@ -49,6 +52,7 @@ import winterwell.markdown.views.MarkdownPreview;
 
 /**
  * Text editor with markdown support.
+ * 
  * @author Daniel Winterstein
  */
 public class MarkdownEditor extends TextEditor implements IDocumentListener 
@@ -71,7 +75,7 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener
 	private ProjectionSupport projectionSupport;
 	private final IPreferenceStore pStore;
 	private IPropertyChangeListener prefChangeListener;
-	
+	private ITextListener textListener;	
 
 	public MarkdownEditor() {
 		super();
@@ -91,6 +95,22 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener
 		    projectionSupport.install();
 		    //turn projection mode on
 		    viewer.doOperation(ProjectionViewer.TOGGLE);
+		    
+		    textListener = new ITextListener() {
+		    	Runnable runnable = new Runnable() {
+		    		@Override
+		    		public void run() {
+		    			if (MarkdownPreview.preview != null) {
+		    				MarkdownPreview.preview.update();
+		    			}
+		    		}
+		    	};
+				@Override
+				public void textChanged(TextEvent event) {
+					Display.getCurrent().timerExec(500, runnable);
+				}
+			};
+			viewer.addTextListener(textListener);
 		}
 	}
 	
@@ -132,6 +152,9 @@ public class MarkdownEditor extends TextEditor implements IDocumentListener
 	public void dispose() {
 		if (pStore != null) {
 			pStore.removePropertyChangeListener(prefChangeListener); 
+		}
+		if (textListener != null) {
+			getSourceViewer().removeTextListener(textListener);
 		}
 		colorManager.dispose();
 		super.dispose();		
