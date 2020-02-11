@@ -66,14 +66,14 @@
 		<repository>
 			<id>eclipse-indigo</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/indigo</url>
+			<url>https://download.eclipse.org/releases/indigo</url>
 		</repository>
 		-->
 		<!-- -->
 		<repository>
 			<id>kepler</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/kepler</url>
+			<url>https://download.eclipse.org/releases/kepler</url>
 		</repository>
 		 
 	</repositories>
